@@ -1,0 +1,6 @@
+#ifndef CRYPOTOLOGY_H
+#define CRYPOTOLOGY_H
+
+
+
+#endif //CRYPOTOLOGY_H

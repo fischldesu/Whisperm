@@ -1,0 +1,4 @@
+.vscode
+.idea
+build
+/server.node/node_modules/

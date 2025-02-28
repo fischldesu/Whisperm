@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/menu">
+        <file alias="/chat.svg">svg/meun_chat.svg</file>
+        <file alias="/contact.svg">svg/menu_contact.svg</file>
+        <file alias="/navigate.svg">svg/menu_navigate.svg</file>
+        <file alias="/more.svg">svg/menu_more.svg</file>
+    </qresource>
+    <qresource prefix="/titlebar">
+        <file alias="/close.svg">svg/titlebar_close.svg</file>
+        <file alias="/maximize.svg">svg/titlebar_maximize.svg</file>
+        <file alias="/minimize.svg">svg/titlebar_minimize.svg</file>
+    </qresource>
+    <qresource prefix="/img">
+    </qresource>
+</RCC>

@@ -1,0 +1,42 @@
+#ifndef LOGINDIALOG_H
+#define LOGINDIALOG_H
+
+#include "ui/Window.h"
+
+
+QT_BEGIN_NAMESPACE
+namespace Ui { class LoginDialog; }
+QT_END_NAMESPACE
+
+class Client;
+class QEventLoop;
+
+class LoginDialog final : public Window {
+Q_OBJECT
+
+public:
+    explicit LoginDialog(const Client* client);
+    ~LoginDialog() override;
+
+    bool exec();
+
+    void Accept() const;
+    void Reject() const;
+private:
+const Client* client;
+    Ui::LoginDialog *ui;
+
+
+    int result = 0;
+    QEventLoop* loop = nullptr;
+
+    void AUTH_FAILED(const QString& response);
+void closeEvent(QCloseEvent* event) override;
+
+public Q_SLOTS:
+    void Client_onConnected();
+    void UI_onTryLogin() const;
+};
+
+
+#endif //LOGINDIALOG_H

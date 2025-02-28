@@ -1,0 +1,190 @@
+#include "tools/multiplatform.hpp"
+#include "ui/Window.h"
+
+#if defined(Q_OS_WINDOWS) && !defined(_MSC_VER)
+HMODULE dwmapi = LoadLibrary(L"dwmapi.dll");
+const PDWMFN DwmExtendFrameIntoClientArea = reinterpret_cast<PDWMFN>(GetProcAddress(dwmapi, "DwmExtendFrameIntoClientArea"));
+const PDWMSETATTR DwmSetWindowAttribute = reinterpret_cast<PDWMSETATTR>(GetProcAddress(dwmapi, "DwmSetWindowAttribute"));
+#endif
+
+#include <QApplication>
+#include <QWidget>
+#include <QEvent>
+#include <QPushButton>
+#include <QStyle>
+
+#include "../header/tools/AppLog.h"
+WindowHelper::WindowHelper(Window *target, QObject *parent) : QObject(parent), m_target(target), m_padding(8)
+{
+    if (m_target)
+    {
+        m_target->winId();
+    }
+}
+
+WindowHelper::~WindowHelper() = default;
+
+void WindowHelper::InitWindowStyle(const int useSpecialBackdrop)
+{
+    if (!m_target) return;
+    m_target->setWindowFlags( Qt::FramelessWindowHint);
+#if defined(Q_OS_WINDOWS)
+    constexpr auto margins = MARGINS{-1, -1, -1, -1};
+    const auto hwnd = reinterpret_cast<HWND>(m_target->winId());
+    const auto style = ::GetWindowLong(hwnd, GWL_STYLE);
+    ::SetWindowLong(hwnd, GWL_STYLE, style | WS_THICKFRAME | WS_MAXIMIZEBOX | WS_MINIMIZEBOX | WS_CAPTION );
+    DwmExtendFrameIntoClientArea(hwnd, &margins);
+    if (useSpecialBackdrop)
+    {
+        DwmSetWindowAttribute(hwnd, 38, &useSpecialBackdrop, sizeof(useSpecialBackdrop));
+    }
+    m_bgColor = QColor{Qt::transparent};
+    #endif
+}
+
+void WindowHelper::SetWindowDarkMode(const bool dark) const
+{
+
+}
+
+bool WindowHelper::NativeEventHandler(const QByteArray &eventType, void *message, qintptr *result)
+{
+    if (!m_target)
+        return false;
+#if defined(Q_OS_WINDOWS)
+    if (!(eventType == "windows_generic_MSG" || eventType == "windows_dispatcher_MSG") || !m_target->isVisible())
+        return false;
+    if (const auto msg = static_cast<::MSG *>(message); msg->hwnd == reinterpret_cast<HWND>(m_target->winId()))
+        switch (msg->message)
+        {
+        case WM_NCHITTEST:
+        {
+            const auto local = m_target->mapFromGlobal(QCursor::pos());
+            if (const int hit = this->Border(local))
+            {
+                *result = hit;
+                return true;
+            }
+            if (this->Caption(local))
+            {
+                *result = HTCAPTION;
+                return true;
+            }
+
+        }
+        break;
+        case WM_NCCALCSIZE:
+            *result = 0;
+            if (IsZoomed(msg->hwnd)) m_target->set_Margins({7, 7, 7, 1});
+            else m_target->set_Margins({0, 0, 0, 0});
+            return true;
+        default:
+            break;
+        }
+#elif defined(Q_OS_LINUX)
+    if (eventType == "xcb_generic_event_t")
+    {
+        xcb_generic_event_t *event = static_cast<xcb_generic_event_t *>(message);
+        const uint8_t type = event->response_type & ~0x80;
+        if (type == XCB_BUTTON_PRESS)
+        {
+            auto *press = reinterpret_cast<xcb_button_press_event_t *>(event);
+            Log(QString::number(press->event_x) + "X|Y" + QString::number(press->event_y), AppLog::LogLevel::Info);
+            QPoint localPos(press->event_x, press->event_y);
+
+            if (Caption(localPos))
+            { // 调用你的判断函数
+                m_dragStartPos = QPoint(press->root_x, press->root_y);
+                m_bDragging = true;
+                return true; // 拦截事件
+            }
+        }
+        else if (type == XCB_MOTION_NOTIFY && m_bDragging)
+        {
+
+            auto *move = reinterpret_cast<xcb_motion_notify_event_t *>(event);
+            QPoint newPos(move->root_x, move->root_y);
+            m_target->move(m_target->pos() + (newPos - m_dragStartPos));
+            m_dragStartPos = newPos;
+            return true;
+        }
+        else if (type == XCB_BUTTON_RELEASE)
+        {
+            m_bDragging = false;
+        }
+    }
+#endif
+    return false;
+}
+
+int WindowHelper::Border(const QPoint pos) const
+{
+    const bool l = pos.x() < m_padding;
+    const bool t = pos.y() < m_padding;
+    const bool r = pos.x() > m_target->width() - m_padding;
+    const bool b = pos.y() > m_target->height() - m_padding;
+    return (r && b)   ? HTBOTTOMRIGHT
+           : (l && b) ? HTBOTTOMLEFT
+           : (r && t) ? HTTOPRIGHT
+           : (l && t) ? HTTOPLEFT
+           : b        ? HTBOTTOM
+           : r        ? HTRIGHT
+           : l        ? HTLEFT
+           : t        ? HTTOP
+                      : 0;
+}
+
+bool WindowHelper::Caption(const QPoint pos) const
+{
+    bool result = false;
+    if (m_titlebar)
+    {
+        if (m_titlebar->geometry().contains(pos))
+            result = true;
+        for (const auto childObject : m_titlebar->children())
+        {
+            if (const auto button = qobject_cast<QPushButton *>(childObject); button && button->geometry().contains(pos))
+            {
+                result = false;
+                break;
+            }
+        }
+    }
+    return result;
+}
+
+int WindowHelper::get_padding() const
+{
+    return m_padding;
+}
+
+QWidget *WindowHelper::get_titlebar() const
+{
+    return m_titlebar;
+}
+
+QColor WindowHelper::bgColor() const
+{
+    return m_bgColor;
+}
+
+void WindowHelper::set_titlebar(QWidget *titlebar)
+{
+    m_titlebar = titlebar;
+}
+
+WindowHelper::PreferedTheme WindowHelper::GetSystemTheme()
+{
+    const auto windowColor = QApplication::palette().color(QPalette::Window);
+    return ((windowColor.red() * 299 + windowColor.green() * 587 + windowColor.blue() * 114) / 1000) < 128
+               ? PreferedTheme::Dark
+               : PreferedTheme::Light;
+}
+
+void WindowHelper::set_padding(const int padding)
+{
+    if (padding > 0)
+        m_padding = padding;
+    else
+        Log("(WindowHelper)padding set invalid.", AppLog::LogLevel::Warning);
+}
