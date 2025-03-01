@@ -5,7 +5,11 @@ enum LogLevel {
 }
 
 function Log(msg: string, logLevel = LogLevel.INFO): void {
-  console.log(`${DateTime_UTCp8()} [${logLevel}] ${msg}`);
+  const _msg = `${DateTime_UTCp8()} [${logLevel}] ${msg}`;
+  let loggger = console.log;
+  if(logLevel === LogLevel.ERROR)
+    loggger = console.error;
+  loggger(_msg);
 }
 
 function DateTime_UTCp8(): string {
