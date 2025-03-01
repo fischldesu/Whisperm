@@ -12,6 +12,7 @@ class _Server {
   
   private constructor() {
     try {
+      //this is an internal host database
       const dbinfo = {
         host: "1Panel-mysql-sAYK",
         port: 3306,
@@ -36,6 +37,10 @@ class _Server {
             const pwd = user.data.split('|')[1];
             if(pwd) this.users.set(user.name, pwd);
         }
+        this.db?.end((err)=>{
+          if(err)
+            Log(`MySQL Connection Close Error: ${err}`, LogLevel.ERROR);
+        });
     }
     if (this.db) {
       this.db.execute("SELECT * FROM user", (err, results: QueryResult) => {
