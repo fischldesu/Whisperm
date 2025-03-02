@@ -33,6 +33,11 @@ public:
     QColor get_bgColor() const { return m_bgColor; }
     [[nodiscard]]
     QColor get_bgHoverColor() const { return m_bgHoverColor; }
+    //fg-color
+    void set_fgColor(const QColor color)
+    { auto pal = this->palette(); pal.setColor(QPalette::ButtonText, color); this->setPalette(pal);}
+    QColor get_fgColor() const
+    { return this->palette().color(QPalette::ButtonText); }
     //AnimationDuaration
     void set_TransitionTime(const int msec) const {m_Transiton_bgColor->setDuration(msec);}
     [[nodiscard]]

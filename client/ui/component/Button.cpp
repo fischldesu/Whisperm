@@ -60,17 +60,25 @@ void Button::Transition(const QColor new_color) const
 
 void Button::paintEvent(QPaintEvent* event)
 {
-    const auto rect = this->rect().adjusted(m_bgMargin, m_bgMargin, -m_bgMargin, -m_bgMargin);
-    Style::PaintBackground(this, property_bgColor, rect, m_bgRadius);
+    const auto& text = this->text();
     const auto w = width();
     const auto h = height();
-    auto iconSize = w < h ? h / 2 : w / 2;
-    iconSize *= m_iconScale;
-    const auto x = (w - iconSize) / 2;
-    const auto y = (h - iconSize) / 2;
-
+    const auto iconSize = (w > h ? h : w) * m_iconScale;
+    const auto icon_y = (h - iconSize) / 2;
+    auto icon_x = (w - iconSize) / 2;
+    auto bgRect = this->rect().adjusted(m_bgMargin, m_bgMargin, -m_bgMargin, -m_bgMargin);
+    Style::PaintBackground(this, property_bgColor, bgRect, m_bgRadius);
     QPainter painter{this};
-    m_icon.paint(&painter, x, y, iconSize, iconSize);
+    if (!text.isEmpty())
+    {
+        icon_x = 0;
+        if (!m_icon.isNull())
+            bgRect.adjust(w > h ? h : w, 0, 0, 0);
+        painter.setPen(this->palette().color(QPalette::ButtonText));
+        painter.setFont(this->font());
+        painter.drawText(bgRect, Qt::AlignCenter, text);
+    }
+    m_icon.paint(&painter, icon_x, icon_y, iconSize, iconSize);
 }
 
 void Button::enterEvent(QEnterEvent* event)

@@ -4,7 +4,6 @@
 #include <QPushButton>
 #include <QPainter>
 #include <QLabel>
-#include "tools/AppLog.h"
 #include "tools/Data.h"
 #include "uicomponent/ChatListItem.h"
 
@@ -27,6 +26,8 @@ PageChats::PageChats(QWidget *parent) :
     UIDLabelConatiner->installEventFilter(this);
     UIDLabelConatiner->hide();
 
+    ui->chatbox_btnSend->set_fgColor(Qt::white);
+    ui->chatbox_btnMore->set_fgColor(Qt::white);
     ui->chatbox_btnSend->set_bgColor(bgColor);
     ui->chatbox_btnMore->set_bgColor(bgColor);
     ui->chatbox_btnSend->set_bgHoverColor(hoverColor);
