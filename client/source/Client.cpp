@@ -134,7 +134,6 @@ void Client::Server_OpenWebSocket()
 {
     m_state = State::Connecting;
     m_ws.open(proxy_url);
-    Log(proxy_url.toString());
 }
 void Client::Server_CloseWebSocket()
 {

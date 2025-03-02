@@ -20,20 +20,14 @@ whisperm::~whisperm()
 
 int whisperm::run() const
 {
-    try
+
+    LoginDialog loginDialog{this->client};
+    if ( loginDialog.exec())
     {
-        LoginDialog loginDialog{this->client};
-        if ( loginDialog.exec())
-        {
-            MainWindow window(this->client);
-            window.show();
-            window.UpdateContentSize();
-            return QApplication::exec();
-        }
-    }
-    catch (...)
-    {
-        const auto& e = std::current_exception();
+        MainWindow window(this->client);
+        window.show();
+        window.UpdateContentSize();
+        return QApplication::exec();
     }
 
     QApplication::closeAllWindows();

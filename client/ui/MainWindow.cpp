@@ -39,10 +39,10 @@ void MainWindow::InitializeComponents()
         m_menubarBtns[i]->set_bgHoverColor({64,64,64, 64});
         connect(m_menubarBtns[i], &QPushButton::clicked, [this, i] { this->SwitchPage(i); });
     }
-    ui->menubar_btnMain->SetContent("Main", QIcon(":/menu/chat.svg"));
-    ui->menubar_btnContacts->SetContent("Contacts", QIcon(":/menu/contact.svg"));
-    ui->menubar_btnMore->SetContent("More", QIcon(":/menu/more.svg"));
-    ui->menubar_btnSettings->SetContent("Settings", QIcon(":/menu/navigate.svg"));
+    ui->menubar_btnMain->SetContent("", QIcon(":/menu/chat.svg"));
+    ui->menubar_btnContacts->SetContent("", QIcon(":/menu/contact.svg"));
+    ui->menubar_btnMore->SetContent("", QIcon(":/menu/more.svg"));
+    ui->menubar_btnSettings->SetContent("", QIcon(":/menu/navigate.svg"));
 
     //message receive/forward
     connect(m_client, &Client::ServerSignal_RecviedMessage, ui->page_1, &PageChats::ReceivedMessage);

@@ -48,6 +48,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="echoMode">
+      <enum>QLineEdit::EchoMode::Password</enum>
+     </property>
     </widget>
    </item>
    <item row="0" column="0" colspan="3">
@@ -129,6 +132,9 @@
      <property name="text">
       <string/>
      </property>
+     <property name="maxLength">
+      <number>18</number>
+     </property>
     </widget>
    </item>
    <item row="7" column="0" colspan="3">
@@ -193,6 +199,12 @@
    </item>
   </layout>
  </widget>
+ <tabstops>
+  <tabstop>input_uid</tabstop>
+  <tabstop>input_pwd</tabstop>
+  <tabstop>btn_login</tabstop>
+  <tabstop>btn_regist</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

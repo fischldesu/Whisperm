@@ -10,6 +10,9 @@
         <file alias="/maximize.svg">svg/titlebar_maximize.svg</file>
         <file alias="/minimize.svg">svg/titlebar_minimize.svg</file>
     </qresource>
+    <qresource prefix="/svg">
+        <file alias="/send_0.svg">svg/send_0.svg</file>
+    </qresource>
     <qresource prefix="/img">
     </qresource>
 </RCC>
