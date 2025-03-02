@@ -142,6 +142,8 @@ void Client::Server_CloseWebSocket()
 
 void Client::Client_Login(const QString& uid, const QString& pwd)
 {
+    if (m_state == State::Authenticating)
+        return;
     this->set_UID(uid.toLocal8Bit());
     this->set_State(State::Authenticating);
     const auto json = QJsonObject{
@@ -152,6 +154,18 @@ void Client::Client_Login(const QString& uid, const QString& pwd)
             {"pubkey", RSAKeyPair.first}
         }}
     };
+    auto loginTimeout = new QTimer;
+    connect(loginTimeout, &QTimer::timeout, [this, loginTimeout]()
+    {
+        if (m_state == State::Authenticating)
+        {
+            Log("(client) Login Timeout.", AppLog::LogLevel::Warning);
+            m_state = State::Connected;
+            emit this->ServerSignal_AuthResponse(false, "登录超时");
+        }
+        loginTimeout->deleteLater();
+    });
+    loginTimeout->start(10000);
     const auto doc = QJsonDocument(json);
     m_ws.sendTextMessage(doc.toJson());
 }
@@ -222,10 +236,8 @@ void Client::Server_onRecviedText(const QString& text)
         bool success = false;
         const auto response = json["data"];
         if (response["result"] == "AUTH_OK" && response["info"].toString() == m_uid)
-        {
             success = true;
-            m_state = State::Idle;
-        }
+        m_state = success ? State::Idle : State::Connected;
         emit this->ServerSignal_AuthResponse(success, response.toString());
     };
 

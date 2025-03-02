@@ -28,6 +28,7 @@ set(Headers
         header/ui/LoginDialog.h
         header/ui/PageChats.h
         header/ui/PageContacts.h
+        header/ui/MessageDialog.h
 
         header/tools/multiplatform.hpp
         header/tools/Data.h
@@ -82,7 +83,7 @@ set(PROJECT_SOURCES
         ui/component/ChatBox.cpp
         ui/component/ChatMessage.cpp
         ui/component/Chat.cpp
-
+        ui/component/MessageDialog.cpp
 
 )
 

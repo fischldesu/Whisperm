@@ -39,6 +39,7 @@ void Window::InitializeWindow()
     this->resize(800, 600);
     if (titlebarWidget)
     {
+        titlebarWidget->setParent(this);
         titlebarHeight = titlebarWidget->height();
     }
     else

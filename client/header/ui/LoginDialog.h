@@ -15,7 +15,7 @@ class LoginDialog final : public Window {
 Q_OBJECT
 
 public:
-    explicit LoginDialog(const Client* client);
+    explicit LoginDialog(Client* client);
     ~LoginDialog() override;
 
     bool exec();
@@ -23,13 +23,11 @@ public:
     void Accept() const;
     void Reject() const;
 private:
-const Client* client;
+    Client* client;
     Ui::LoginDialog *ui;
-
-
     int result = 0;
     QEventLoop* loop = nullptr;
-
+    bool mb_online = false;
     void AUTH_FAILED(const QString& response);
 void closeEvent(QCloseEvent* event) override;
 
