@@ -10,8 +10,8 @@ class ChatMessage final : public QWidget{
 public:
     ChatMessage(QWidget* parent, bool self, const QString& text);
 private:
-
     QTextEdit* m_TextEdit;
+    QMenu* m_menu;
     bool mb_self;
     QString m_source;
 
@@ -19,7 +19,9 @@ private:
 
     void resizeEvent(QResizeEvent* event) override;
     // void paintEvent(QPaintEvent* event) override;
-    // bool eventFilter(QObject* watched, QEvent* event) override;
+    bool eventFilter(QObject* watched, QEvent* event) override;
+private Q_SLOTS:
+    void onContextMenu_Copy();
 };
 
 
