@@ -11,6 +11,7 @@ LoginDialog::LoginDialog(Client* client) :
 , client(client)
 ,ui(new Ui::LoginDialog) {
     ui->setupUi(this->centralWidget);
+    this->setFixedSize(this->centralWidget->size()+QSize(0, this->titlebarWidget->height()));
     const QRegularExpression regExp("[A-Za-z0-9]*");
     this->setWindowModality(Qt::ApplicationModal);
     this->setFixedSize(this->centralWidget->size()+QSize(0, this->titlebarWidget->height()));
