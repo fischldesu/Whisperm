@@ -57,9 +57,9 @@ QString System::GetCompilerName()
 #elif defined(Q_CC_MINGW)
     name = "MinGW";
 #ifdef _WIN64
-    name += QString("-W64 %1").arg(Q_CC_MINGW);
+    name += QString("-W64 %1").arg(__GNUC__);
 #else
-    name += QString(" %1").arg(Q_CC_MINGW);
+    name += QString(" %1").arg(__GNUC__);
 #endif
 #elif defined(Q_CC_GNU)
     name = QString("GCC %1.%2.%3").arg(
