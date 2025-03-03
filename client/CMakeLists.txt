@@ -84,6 +84,9 @@ set(PROJECT_SOURCES
         ui/component/ChatMessage.cpp
         ui/component/Chat.cpp
         ui/component/MessageDialog.cpp
+        ui/page/PageSettings.cpp
+        header/ui/PageSettings.h
+        ui/page/PageSettings.ui
 
 )
 

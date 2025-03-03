@@ -38,7 +38,15 @@ const extern PDWMSETATTR DwmSetWindowAttribute;
 
 namespace System
 {
+    enum Platform
+    {
+        Windows,
+        Linux,
+        MacOS
+    };
 
+    QString GetOSName();
+    QString GetCompilerName();
 
 };
 

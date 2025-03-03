@@ -11,8 +11,8 @@
 Window::Window(QWidget* parent, QWidget* custom_titlebar, const QString& titleText) :
     QWidget(parent), m_helper(this),centralWidget(new QWidget(this)), titlebarWidget(custom_titlebar)
 {
-    this->setWindowTitle(titleText);
     this->InitializeWindow();
+    this->setWindowTitle(titleText);
 }
 
 Window::~Window() = default;

@@ -8,7 +8,8 @@ int main(const int argc, char** argv)
 
 whisperm::whisperm(int argc, char** argv):app(argc, argv)
 {
-    QApplication::setApplicationName("Whisperm");
+    QApplication::setApplicationName(_AppName_);
+    QApplication::setApplicationVersion(_AppVersion_);
 
     this->client = new Client;
 }
