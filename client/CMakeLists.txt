@@ -28,6 +28,7 @@ set(Headers
         header/ui/LoginDialog.h
         header/ui/PageChats.h
         header/ui/PageContacts.h
+        header/ui/PageSettings.h
         header/ui/MessageDialog.h
 
         header/tools/multiplatform.hpp
@@ -76,6 +77,8 @@ set(PROJECT_SOURCES
         ui/page/PageContacts.cpp
         ui/page/PageChats.ui
         ui/page/PageContacts.ui
+        ui/page/PageSettings.cpp
+        ui/page/PageSettings.ui
 
         ui/component/Button.cpp
         ui/component/MainContainer.cpp
@@ -84,9 +87,6 @@ set(PROJECT_SOURCES
         ui/component/ChatMessage.cpp
         ui/component/Chat.cpp
         ui/component/MessageDialog.cpp
-        ui/page/PageSettings.cpp
-        header/ui/PageSettings.h
-        ui/page/PageSettings.ui
 
 )
 
