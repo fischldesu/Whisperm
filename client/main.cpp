@@ -2,7 +2,7 @@
 
 int main(const int argc, char** argv)
 {
-    const whisperm app(argc, argv);
+    whisperm app(argc, argv);
     return app.run();
 }
 
@@ -12,26 +12,65 @@ whisperm::whisperm(int argc, char** argv):app(argc, argv)
     QApplication::setApplicationVersion(_AppVersion_);
 
     this->client = new Client;
+    this->InitTrayIcon();
 }
 
 whisperm::~whisperm()
 {
-    delete client;
+    this->quit();
 }
 
-int whisperm::run() const
+int whisperm::run()
 {
-
-    LoginDialog loginDialog{this->client};
-    if ( loginDialog.exec())
+    loginDialog = std::make_unique<LoginDialog>(this->client);
+    if (loginDialog->exec())
     {
-        MainWindow window(this->client);
-        window.show();
-        window.UpdateContentSize();
+        loginDialog.reset();
+
+        mainWindow = std::make_unique<MainWindow>(this->client);
+        mainWindow->show();
+        mainWindow->UpdateContentSize();
+        if (m_trayIcon)
+        {
+            m_trayIcon->show();
+            QApplication::setQuitOnLastWindowClosed(false);
+        }
         return QApplication::exec();
     }
+    return 0;
+}
+
+void whisperm::quit()
+{
+    delete client;
+    delete m_trayIcon;
+    delete m_trayMenu;
+    client = nullptr;
+    m_trayIcon = nullptr;
+    m_trayMenu = nullptr;
 
     QApplication::closeAllWindows();
     QApplication::quit();
-    return 0;
+}
+
+void whisperm::display()
+{
+    if (mainWindow)
+        mainWindow->show();
+}
+
+void whisperm::InitTrayIcon()
+{
+    if (QSystemTrayIcon::isSystemTrayAvailable())
+    {
+        m_trayIcon = new QSystemTrayIcon;
+        m_trayMenu = new QMenu;
+
+        m_trayIcon->setIcon(QIcon(":/svg/chat-icon_blue.svg"));
+        m_trayIcon->setContextMenu(m_trayMenu);
+        m_trayIcon->setToolTip(QApplication::applicationName());
+
+        QObject::connect(m_trayMenu->addAction("打开"), &QAction::triggered, [this]{ this->display(); });
+        QObject::connect(m_trayMenu->addAction("退出"), &QAction::triggered, [this]{ this->quit(); });
+    }
 }

@@ -82,7 +82,7 @@ private:
     Window* m_target{};
     QWidget* m_titlebar{};
     int m_padding;
-
+    bool mb_Initialized = false;
     QColor m_bgColor;
     #if defined(Q_OS_LINUX)
 

@@ -1,11 +1,13 @@
 #include "ui/Window.h"
 
 #include <QApplication>
+#include <QCloseEvent>
 #include <QEvent>
 #include <QOperatingSystemVersion>
 #include <QPainter>
 #include <QStyleOption>
 
+#include "tools/AppLog.h"
 #include "uicomponent/TitleBar.h"
 
 Window::Window(QWidget* parent, QWidget* custom_titlebar, const QString& titleText) :
@@ -89,6 +91,26 @@ void Window::paintEvent(QPaintEvent* event)
     painter.fillRect(this->rect(), m_helper.bgColor());
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
     QWidget::paintEvent(event);
+}
+
+void Window::closeEvent(QCloseEvent* event)
+{
+    if (QApplication::quitOnLastWindowClosed())
+    {
+        event->accept();
+    }
+    else
+    {
+        this->hide();
+        event->ignore();
+    }
+}
+
+void Window::showEvent(QShowEvent* event)
+{
+    QWidget::showEvent(event);
+    m_helper.InitWindowStyle(2);
+    this->activateWindow();
 }
 
 bool Window::nativeEvent(const QByteArray& eventType, void* message, qintptr* result)

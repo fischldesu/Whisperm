@@ -15,6 +15,7 @@ LoginDialog::LoginDialog(Client* client) :
     this->setWindowModality(Qt::ApplicationModal);
     this->setFixedSize(this->centralWidget->size()+QSize(0, this->titlebarWidget->height()));
     connect(client, &Client::ServerSignal_Connected, this, &LoginDialog::Client_onConnected);
+    connect(client, &Client::ServerSignal_Disconnected, this, &LoginDialog::Client_onDisconnected);
     connect(ui->btn_login, &QPushButton::clicked, this, &LoginDialog::UI_onTryLogin);
     ui->input_uid->setValidator(new QRegularExpressionValidator(regExp, this));
 }
@@ -28,52 +29,52 @@ bool LoginDialog::exec()
     const auto auth = [this](bool sucess, const QString& response)
     {
         if (sucess)
-        {
             this->Accept();
-        }
         else
-        {
             this->AUTH_FAILED(response);
-        }
     };
     connect(client, &Client::ServerSignal_AuthResponse, auth);
 
+    // ReSharper disable once CppMsExtAddressOfClassRValue
+    this->loop = &QEventLoop{};
     this->show();
-    QEventLoop eventLoop;
-    // ReSharper disable once CppDFALocalValueEscapesFunction
-    this->loop = &eventLoop;
     this->result = this->loop->exec();
     this->loop = nullptr;
     this->close();
     return this->result;
 }
 
-void LoginDialog::Accept() const
+void LoginDialog::Accept()
 {
-    if (this->loop) {
-        this->loop->exit(true);
-    }
+    if (this->loop)
+        this->loop->exit(1);
+    else this->close();
 }
 
-void LoginDialog::Reject() const
+void LoginDialog::Reject()
 {
-    if (this->loop) {
-        this->loop->exit(false);
-    }
+    if (this->loop)
+        this->loop->exit(0);
 }
 
 void LoginDialog::closeEvent(QCloseEvent* event)
 {
-    Window::closeEvent(event);
     this->Reject();
     event->accept();
 }
 
 void LoginDialog::Client_onConnected()
 {
-    this->setWindowTitle("🟩 " + this->windowTitle());
+    this->setWindowTitle("🟩 " + QApplication::applicationName());
     ui->label_information->setText("");
     mb_online = true;
+}
+
+void LoginDialog::Client_onDisconnected()
+{
+    this->setWindowTitle(QApplication::applicationName());
+    ui->label_information->setText("已离线");
+    mb_online = false;
 }
 
 void LoginDialog::UI_onTryLogin() const

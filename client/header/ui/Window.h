@@ -28,6 +28,8 @@ protected:
     void changeEvent(QEvent *event) override;
     void resizeEvent(QResizeEvent* event) override;
     void paintEvent(QPaintEvent* event) override;
+    void closeEvent(QCloseEvent* event) override;
+    void showEvent(QShowEvent* event) override;
     bool nativeEvent(const QByteArray& eventType, void* message, qintptr* result) override;
 };
 

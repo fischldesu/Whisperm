@@ -91,7 +91,11 @@ WindowHelper::~WindowHelper() = default;
 void WindowHelper::InitWindowStyle(const int useSpecialBackdrop)
 {
     if (!m_target) return;
-    m_target->setWindowFlags( Qt::FramelessWindowHint);
+    if (!mb_Initialized)
+    {
+        m_target->setWindowFlags( Qt::FramelessWindowHint);
+        mb_Initialized = true;
+    }
 #if defined(Q_OS_WINDOWS)
     constexpr auto margins = MARGINS{-1, -1, -1, -1};
     const auto hwnd = reinterpret_cast<HWND>(m_target->winId());
@@ -103,7 +107,7 @@ void WindowHelper::InitWindowStyle(const int useSpecialBackdrop)
         DwmSetWindowAttribute(hwnd, 38, &useSpecialBackdrop, sizeof(useSpecialBackdrop));
     }
     m_bgColor = QColor{Qt::transparent};
-    #endif
+#endif
 }
 
 void WindowHelper::SetWindowDarkMode(const bool dark) const

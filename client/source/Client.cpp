@@ -6,23 +6,16 @@
 #include "tools/AppLog.h"
 
 Client::Client(QObject* parent, const QUrl& proxy) :
-    QObject(parent), server_url("wss://server.fischldesu.com/whisperm"), m_state(State::Disconnected), m_trayIcon(nullptr),
+    QObject(parent), server_url("wss://server.fischldesu.com/whisperm"), m_state(State::Disconnected),
     m_timeout_counter(0), timeout_time(10)
 {
-
-    RSAKeyPair.first = "pbkey/pbkey/0202";
-
-    const Data::ConfigHelper config_helper{"config.ini"};
-    this->config = config_helper.GetConfig();
-
     this->set_ServerUrl(proxy);
-
     this->Initialize();
 }
 
 Client::~Client()
 {
-    delete m_trayIcon;
+    m_ws.close(QWebSocketProtocol::CloseCodeNormal, "ClientApp quit");
 }
 
 Client::State Client::get_State() const { return m_state; }
@@ -47,27 +40,6 @@ void Client::set_ServerUrl(const QUrl& proxy)
 
 void Client::Initialize()
 {
-    // System Tray
-    if (QSystemTrayIcon::isSystemTrayAvailable())
-    {
-        m_trayIcon = new QSystemTrayIcon(this);
-        if (config["client/close_to_tray"] == "1")
-            QApplication::setQuitOnLastWindowClosed(false);
-        else if (config["client/close_to_tray"] == "0")
-            QApplication::setQuitOnLastWindowClosed(true);
-        connect(m_trayIcon, &QSystemTrayIcon::activated, this,
-                [this](const QSystemTrayIcon::ActivationReason reason)
-                {
-                    if (reason == QSystemTrayIcon::DoubleClick)
-                    {
-                        emit this->ClientSignal_SysTrayTrigger(0);
-                    }
-                });
-        // other
-    }
-    else
-        Log("(client) System Tray is not available.", AppLog::LogLevel::Warning);
-
     // WebSocket
     connect(&m_ws, &QWebSocket::connected, this, &Client::Server_onConnect);
     connect(&m_ws, &QWebSocket::disconnected, this, &Client::Server_onDisconnect);
@@ -79,9 +51,6 @@ void Client::Initialize()
     // Timer
     this->startTimer(1000);
     m_timeout_counter = timeout_time;
-
-
-
 }
 void Client::timerEvent(QTimerEvent* event)
 {

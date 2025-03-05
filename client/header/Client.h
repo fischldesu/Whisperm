@@ -7,8 +7,6 @@
 
 #include "tools/Data.h"
 
-class QSystemTrayIcon;
-
 #endif // CLIENT_H
 class Client final :public QObject
 {
@@ -40,8 +38,6 @@ private:
     QWebSocket m_ws;
     State m_state;
     QByteArray m_uid;
-    QSystemTrayIcon* m_trayIcon;
-    QHash<QString, QString> config;
     QMap<QByteArray, QByteArray> onlineList;
     int m_timeout_counter;
     int timeout_time;

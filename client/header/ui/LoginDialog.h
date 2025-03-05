@@ -20,8 +20,8 @@ public:
 
     bool exec();
 
-    void Accept() const;
-    void Reject() const;
+    void Accept();
+    void Reject();
 private:
     Client* client;
     Ui::LoginDialog *ui;
@@ -29,10 +29,10 @@ private:
     QEventLoop* loop = nullptr;
     bool mb_online = false;
     void AUTH_FAILED(const QString& response);
-void closeEvent(QCloseEvent* event) override;
-
+    void closeEvent(QCloseEvent* event) override;
 public Q_SLOTS:
     void Client_onConnected();
+    void Client_onDisconnected();
     void UI_onTryLogin() const;
 };
 
