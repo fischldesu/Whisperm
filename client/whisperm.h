@@ -2,12 +2,13 @@
 #define WHISPEM_H
 
 #include <QApplication>
-#include <QMenu>
 #include "Client.h"
+#include "tools/AppLog.h"
 #include "ui/LoginDialog.h"
 #include "ui/MainWindow.h"
+#include "uicomponent/Button.h"
+#include "uicomponent/SystemTrayMenu.h"
 
-class QSystemTrayIcon;
 #ifndef _AppName_
 #define _AppName_ "Whisperm"
 #endif
@@ -23,18 +24,19 @@ public:
     int run();
 
 public Q_SLOTS:
-    void quit();
-    void display();
+    static void quit();
+    void display() const;
 private:
     void InitTrayIcon();
     QSystemTrayIcon* m_trayIcon = nullptr;
-    QMenu* m_trayMenu = nullptr;
+    SystemTrayMenu* m_trayMenu = nullptr;
     Client* client;
 //window
     std::unique_ptr<LoginDialog> loginDialog;
     std::unique_ptr<MainWindow> mainWindow;
 
     QApplication app;
+    AppLogger logger;
 };
 
 

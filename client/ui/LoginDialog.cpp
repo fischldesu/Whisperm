@@ -36,7 +36,8 @@ bool LoginDialog::exec()
     connect(client, &Client::ServerSignal_AuthResponse, auth);
 
     // ReSharper disable once CppMsExtAddressOfClassRValue
-    this->loop = &QEventLoop{};
+    QEventLoop loop;
+    this->loop = &loop;
     this->show();
     this->result = this->loop->exec();
     this->loop = nullptr;
@@ -94,5 +95,5 @@ void LoginDialog::UI_onTryLogin() const
 void LoginDialog::AUTH_FAILED(const QString& response)
 {
     ui->label_information->setText("登录失败 " + response);
-    Log("Login Failed:" + response, AppLog::LogLevel::Warning);
+    Log("Login Failed:" + response, AppLogger::LogLevel::Warning);
 }

@@ -4,6 +4,8 @@
         <file alias="/contact.svg">svg/menu_contact.svg</file>
         <file alias="/navigate.svg">svg/menu_navigate.svg</file>
         <file alias="/more.svg">svg/menu_more.svg</file>
+        <file alias="/tray/open.svg">svg/menu_open.svg</file>
+        <file alias="/tray/close.svg">svg/menu_close.svg</file>
     </qresource>
     <qresource prefix="/titlebar">
         <file alias="/close.svg">svg/titlebar_close.svg</file>

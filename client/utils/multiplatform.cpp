@@ -254,5 +254,5 @@ void WindowHelper::set_padding(const int padding)
     if (padding > 0)
         m_padding = padding;
     else
-        Log("(WindowHelper)padding set invalid.", AppLog::LogLevel::Warning);
+        Log("(WindowHelper)padding set invalid.", AppLogger::LogLevel::Warning);
 }

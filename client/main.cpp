@@ -6,10 +6,12 @@ int main(const int argc, char** argv)
     return app.run();
 }
 
-whisperm::whisperm(int argc, char** argv):app(argc, argv)
+whisperm::whisperm(int argc, char** argv):app(argc, argv), logger(true)
 {
     QApplication::setApplicationName(_AppName_);
     QApplication::setApplicationVersion(_AppVersion_);
+
+    AppLogger::set_Instance(&logger);
 
     this->client = new Client;
     this->InitTrayIcon();
@@ -17,7 +19,9 @@ whisperm::whisperm(int argc, char** argv):app(argc, argv)
 
 whisperm::~whisperm()
 {
-    this->quit();
+    delete client;
+    delete m_trayIcon;
+    delete m_trayMenu;
 }
 
 int whisperm::run()
@@ -32,6 +36,7 @@ int whisperm::run()
         mainWindow->UpdateContentSize();
         if (m_trayIcon)
         {
+            m_trayIcon->setToolTip(QApplication::applicationName()+ "\nUID: " + client->get_UID());
             m_trayIcon->show();
             QApplication::setQuitOnLastWindowClosed(false);
         }
@@ -42,21 +47,20 @@ int whisperm::run()
 
 void whisperm::quit()
 {
-    delete client;
-    delete m_trayIcon;
-    delete m_trayMenu;
-    client = nullptr;
-    m_trayIcon = nullptr;
-    m_trayMenu = nullptr;
-
     QApplication::closeAllWindows();
     QApplication::quit();
 }
 
-void whisperm::display()
+void whisperm::display() const
 {
     if (mainWindow)
+    {
         mainWindow->show();
+        if (mainWindow->isMinimized())
+            mainWindow->showNormal();
+        mainWindow->activateWindow();
+        mainWindow->raise();
+    }
 }
 
 void whisperm::InitTrayIcon()
@@ -64,13 +68,24 @@ void whisperm::InitTrayIcon()
     if (QSystemTrayIcon::isSystemTrayAvailable())
     {
         m_trayIcon = new QSystemTrayIcon;
-        m_trayMenu = new QMenu;
-
+        m_trayMenu = new SystemTrayMenu(m_trayIcon);
         m_trayIcon->setIcon(QIcon(":/svg/chat-icon_blue.svg"));
-        m_trayIcon->setContextMenu(m_trayMenu);
-        m_trayIcon->setToolTip(QApplication::applicationName());
 
-        QObject::connect(m_trayMenu->addAction("打开"), &QAction::triggered, [this]{ this->display(); });
-        QObject::connect(m_trayMenu->addAction("退出"), &QAction::triggered, [this]{ this->quit(); });
+        QHash<QString, QPair< QIcon, std::function<void()>>> buttons;
+
+        buttons.insert("打开窗口",{QIcon(":/menu/tray/open.svg"), [this]
+        {this->display();}});
+        buttons.insert("退出", {QIcon(":/menu/tray/close.svg"), [this]
+        {this->quit();}});
+
+        const auto menu = m_trayMenu->Menu();
+        for (auto it = buttons.constBegin(); it != buttons.constEnd(); ++it)
+        {
+            const auto data = it.value();
+            const auto btn = new Button(menu);
+            btn->SetContent(it.key(), data.first);
+            QObject::connect(btn, &QPushButton::clicked, [data]{ data.second();});
+            m_trayMenu->AddAction(btn);
+        }
     }
 }

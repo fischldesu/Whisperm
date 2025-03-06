@@ -1,8 +1,11 @@
 #include "tools/AppLog.h"
 
-#include <QDateTime>
+#include <iostream>
+#include <QtConcurrent/QtConcurrent>
 
-void AppLog::Log(const QString& logMessage, LogLevel level) const
+AppLogger* AppLogger::s_instance;
+
+void AppLogger::Log(const QString& logMessage, LogLevel level)
 {
     QString timeFormat{"MM-dd hh:mm:ss"};
     if (m_printYear)
@@ -16,16 +19,45 @@ void AppLog::Log(const QString& logMessage, LogLevel level) const
     case LogLevel::Error: _level = "[ERROR]"; break;
     }
     const QString log = time + " " + _level + " " + logMessage;
-    puts(log.toUtf8().data());
+
+    QMutexLocker locker(&m_logQueue_Mutex);
+    m_logQueue.enqueue(log);
+    locker.unlock();
 }
 
-AppLog::AppLog():m_printYear(false)
+AppLogger::AppLogger(bool printYear):m_printYear(printYear)
 {
-
+    m_running = true;
+    m_logThreadFuture = QtConcurrent::run([=]
+    {
+        while (m_running)
+        { this->Locked_Log();}
+    });
 }
 
-AppLog AppLog::Instance()
+AppLogger::~AppLogger()
 {
-    static AppLog instance;
-    return instance;
+    m_running = false;
+    if (m_logThreadFuture.isRunning())
+        m_logThreadFuture.waitForFinished();
+}
+
+AppLogger* AppLogger::get_Instance()
+{
+    return s_instance;
+}
+
+void AppLogger::set_Instance(AppLogger* instance)
+{
+    s_instance = instance;
+}
+
+void AppLogger::Locked_Log()
+{
+    QMutexLocker locker(&m_logQueue_Mutex);
+    while (!m_logQueue.isEmpty())
+    {
+        const auto log = m_logQueue.dequeue();
+        std::clog << log.toStdString() << std::endl;
+    }
 }

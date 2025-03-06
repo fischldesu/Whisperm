@@ -48,6 +48,7 @@ set(Headers
         header/uicomponent/ChatMessage.h
         header/uicomponent/ChatBox.h
         header/uicomponent/Chat.h
+        header/uicomponent/SystemTrayMenu.h
 )
 
 set(PROJECT_SOURCES
@@ -87,6 +88,7 @@ set(PROJECT_SOURCES
         ui/component/ChatMessage.cpp
         ui/component/Chat.cpp
         ui/component/MessageDialog.cpp
+        ui/component/SystemTrayMenu.cpp
 
 )
 
