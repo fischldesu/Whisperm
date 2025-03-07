@@ -4,8 +4,6 @@
         <file alias="/contact.svg">svg/menu_contact.svg</file>
         <file alias="/navigate.svg">svg/menu_navigate.svg</file>
         <file alias="/more.svg">svg/menu_more.svg</file>
-        <file alias="/tray/open.svg">svg/menu_open.svg</file>
-        <file alias="/tray/close.svg">svg/menu_close.svg</file>
     </qresource>
     <qresource prefix="/titlebar">
         <file alias="/close.svg">svg/titlebar_close.svg</file>
@@ -13,8 +11,12 @@
         <file alias="/minimize.svg">svg/titlebar_minimize.svg</file>
     </qresource>
     <qresource prefix="/svg">
-        <file alias="/send_0.svg">svg/send_0.svg</file>
-        <file alias="/chat-icon_blue.svg">svg/chat-icon_blue.svg</file>
+        <file alias="/fonticon/send_0.svg">svg/send_0.svg</file>
+    </qresource>
+    <qresource prefix="/tray">
+        <file alias="/icon.svg">svg/tray_icon.svg</file>
+        <file alias="/menu_open.svg">svg/tray_open.svg</file>
+        <file alias="/menu_close.svg">svg/tray_close.svg</file>
     </qresource>
     <qresource prefix="/img">
     </qresource>

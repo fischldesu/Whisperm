@@ -26,7 +26,7 @@ PageChats::PageChats(QWidget *parent) :
     UIDLabelConatiner->installEventFilter(this);
     UIDLabelConatiner->hide();
 
-    ui->chatbox_btnSend->SetContent("Send", QIcon(":/svg/send_0.svg"));
+    ui->chatbox_btnSend->SetContent("Send", QIcon(":/svg/fonticon/send_0.svg"));
     ui->chatbox_btnSend->set_IconScale(0.5);
     ui->chatbox_btnSend->set_fgColor(Qt::white);
     ui->chatbox_btnMore->set_fgColor(Qt::white);

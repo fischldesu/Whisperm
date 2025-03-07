@@ -11,6 +11,7 @@ SystemTrayMenu::SystemTrayMenu(QSystemTrayIcon* trayIcon):m_trayIcon(trayIcon)
 {
     m_trayIcon->setContextMenu(&m_menu);
     m_trayIcon->setToolTip(QApplication::applicationName());
+    connect(m_trayIcon, &QSystemTrayIcon::activated, this, &SystemTrayMenu::onTrayIconTrigger);
     m_menu.installEventFilter(this);
 }
 
@@ -26,10 +27,19 @@ void SystemTrayMenu::AddAction(Button* button)
             { m_menu.close(); QApplication::postEvent(button, new QEvent(QEvent::Leave)); });
 }
 
-void SystemTrayMenu::AddActions(QList<Button*> buttons)
+void SystemTrayMenu::AddActions(const QList<Button*>& buttons)
 {
     for (const auto button: buttons)
         this->AddAction(button);
+}
+
+void SystemTrayMenu::onTrayIconTrigger(QSystemTrayIcon::ActivationReason reason)
+{
+    if (reason == QSystemTrayIcon::DoubleClick)
+    {
+        if (mf_Tray_DoubleClick)
+            mf_Tray_DoubleClick();
+    }
 }
 
 bool SystemTrayMenu::eventFilter(QObject* watched, QEvent* event)

@@ -69,19 +69,19 @@ void whisperm::InitTrayIcon()
     {
         m_trayIcon = new QSystemTrayIcon;
         m_trayMenu = new SystemTrayMenu(m_trayIcon);
-        m_trayIcon->setIcon(QIcon(":/svg/chat-icon_blue.svg"));
-
+        m_trayIcon->setIcon(QIcon(":/tray/icon.svg"));
+        m_trayMenu->set_Tray_DoubleClick([this]{ this->display(); });
         QHash<QString, QPair< QIcon, std::function<void()>>> buttons;
 
-        buttons.insert("打开窗口",{QIcon(":/menu/tray/open.svg"), [this]
+        buttons.insert("打开窗口",{QIcon(":/tray/menu_open.svg"), [this]
         {this->display();}});
-        buttons.insert("退出", {QIcon(":/menu/tray/close.svg"), [this]
-        {this->quit();}});
+        buttons.insert("退出", {QIcon(":/tray/menu_close.svg"), [this]
+        { quit();}});
 
         const auto menu = m_trayMenu->Menu();
         for (auto it = buttons.constBegin(); it != buttons.constEnd(); ++it)
         {
-            const auto data = it.value();
+            const auto& data = it.value();
             const auto btn = new Button(menu);
             btn->SetContent(it.key(), data.first);
             QObject::connect(btn, &QPushButton::clicked, [data]{ data.second();});

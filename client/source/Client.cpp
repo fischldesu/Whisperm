@@ -207,7 +207,7 @@ void Client::Server_onRecviedText(const QString& text)
         if (response["result"] == "AUTH_OK" && response["info"].toString() == m_uid)
             success = true;
         m_state = success ? State::Idle : State::Connected;
-        emit this->ServerSignal_AuthResponse(success, response.toString());
+        emit this->ServerSignal_AuthResponse(success, response["result"].toString());
     };
 
     const auto Recv_OnlineList = [this, json]()
