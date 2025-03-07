@@ -36,7 +36,7 @@ set(Headers
         header/tools/AppLog.h
         header/tools/Media.h
         header/tools/Style.h
-        header/tools/Promise.h
+        header/tools/Async.h
         header/tools/Animation.h
         header/tools/Cryptology.h
         header/tools/BigInteger.h
@@ -63,7 +63,6 @@ set(PROJECT_SOURCES
         utils/AppLog.cpp
         utils/Media.cpp
         utils/Style.cpp
-        utils/Promise.cpp
         utils/Animation.cpp
         utils/Cryptology.cpp
         utils/BigInteger.cpp
