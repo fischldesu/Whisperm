@@ -1,22 +1,58 @@
 #ifndef ENUM_H
 #define ENUM_H
 
-#include "multiplatform.hpp"
+#include <QMetaEnum>
 
 template <typename E>
 concept EnumTypename = std::is_enum_v<E>;
+template <EnumTypename E>
+using underlyingType = std::underlying_type_t<E>;
 
+template <EnumTypename E> requires QtPrivate::IsQEnumHelper<E>::Value
 class Enum
 {
 public:
-    template <EnumTypename E>
-    static constexpr QString Reflex_TypeName()
-    {
-        auto name = Reflex::TemplateName<E>();
-        if(System::GetCompiler() == System::Compiler::MSVC)
-            return name.mid(5, name.size() - 5);
-        return name;
+    Enum():data(QMetaEnum::fromType<E>()){
+        for (int i = 0; i < data.keyCount(); ++i)
+            map.insert(data.key(i), static_cast<E>(data.value(i)));
     }
+
+    [[nodiscard("Returns MemberCount Only")]]
+    std::size_t Count() const
+    { return data.keyCount(); }
+
+    E Map(const QByteArray& name);
+    QByteArray Name (E value);
+
+private:
+    QMetaEnum data;
+    QMap<QByteArray, E> map;
 };
+
+template <EnumTypename E> requires QtPrivate::IsQEnumHelper<E>::Value
+E Enum<E>::Map(const QByteArray& name)
+{ return map.value(name, static_cast<E>(-1)); }
+
+template <EnumTypename E> requires QtPrivate::IsQEnumHelper<E>::Value
+QByteArray Enum<E>::Name(const E value)
+{ return data.valueToKey(static_cast<underlyingType<E>>(value)); }
+
+namespace Reflex
+{
+    template <EnumTypename E> requires QtPrivate::IsQEnumHelper<E>::Value
+    [[nodiscard("Returns MemberCount Only")]]
+    std::size_t Enum_Count()
+    { return QMetaEnum::fromType<E>().keyCount(); }
+
+    template <EnumTypename E> requires QtPrivate::IsQEnumHelper<E>::Value
+    [[nodiscard("Returns EnumValue Only")]]
+    E Enum_Value(const QByteArray& name)
+    { return QMetaEnum::fromType<E>().keyToValue(name); }
+
+    template <EnumTypename E> requires QtPrivate::IsQEnumHelper<E>::Value
+    [[nodiscard("Returns EnumName Only")]]
+    QByteArray Enum_Name(const E value)
+    { return QMetaEnum::fromType<E>().valueToKey(value); }
+}
 
 #endif // ENUM_H

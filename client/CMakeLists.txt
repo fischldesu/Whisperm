@@ -36,7 +36,7 @@ set(Headers
         header/tools/AppLog.h
         header/tools/Media.h
         header/tools/Style.h
-        header/tools/Async.h
+        header/tools/Task.h
         header/tools/Animation.h
         header/tools/Cryptology.h
         header/tools/BigInteger.h
