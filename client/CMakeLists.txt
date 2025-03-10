@@ -40,6 +40,7 @@ set(Headers
         header/tools/Animation.h
         header/tools/Cryptology.h
         header/tools/BigInteger.h
+        header/tools/Enum.h
 
         header/uicomponent/TitleBar.h
         header/uicomponent/MainContainer.h
@@ -66,6 +67,7 @@ set(PROJECT_SOURCES
         utils/Animation.cpp
         utils/Cryptology.cpp
         utils/BigInteger.cpp
+        utils/Enum.cpp
 
         ui/component/TitleBar.cpp
         ui/MainWindow.cpp
@@ -88,7 +90,6 @@ set(PROJECT_SOURCES
         ui/component/Chat.cpp
         ui/component/MessageDialog.cpp
         ui/component/SystemTrayMenu.cpp
-
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

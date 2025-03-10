@@ -15,6 +15,33 @@ const PDWMSETATTR DwmSetWindowAttribute = reinterpret_cast<PDWMSETATTR>(GetProcA
 
 #include "../header/tools/AppLog.h"
 
+
+System::Platform System::GetPlatform()
+{
+    Platform platform = Platform::Other;
+#if defined(Q_OS_WINDOWS)
+    platform = Platform::Windows;
+#elif defined(Q_OS_LINUX)
+    platform = Platform::Linux;
+#elif defined(Q_OS_MACOS)
+    platform = Platform::MacOS;
+#endif
+    return platform;
+}
+
+System::Compiler System::GetCompiler()
+{
+    Compiler compiler = Compiler::OtherCompiler;
+#if defined(_MSC_VER)
+    compiler = Compiler::MSVC;
+#elif defined(__GNUC__) || defined(__GNUG__)
+    compiler = Compiler::Gcc_Gxx;
+#elif defined(__clang__)
+    compiler = Compiler::Clang;
+#endif
+    return  compiler;
+}
+
 QString System::GetOSName()
 {
     QString name;
@@ -36,6 +63,8 @@ QString System::GetOSName()
     name = "OpenBSD";
 #elif defined(Q_OS_UNIX)
     name = "Unix";
+#else
+    static_assert(false, "UnknownOS");
 #endif
 #if defined(Q_PROCESSOR_X86_64) || defined(_WIN64) || defined(__x86_64__) || defined(__amd64)
     name += " x64";
@@ -45,6 +74,8 @@ QString System::GetOSName()
     name += " ARM64";
 #elif defined(Q_PROCESSOR_ARM_32)
     name += " ARM32";
+#else
+    static_assert(false, "UnknownArchitecture");
 #endif
     return name;
 }
@@ -73,7 +104,7 @@ QString System::GetCompilerName()
     name = QString("Apple Clang %1.%2.%3").arg(
         __clang_major__).arg(__clang_minor__).arg(__clang_patchlevel__);
 #else
-    name = "UnknownCompiler";
+    static_assert(false, "UnknownCompiler");
 #endif
     return name;
 }

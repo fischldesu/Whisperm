@@ -42,13 +42,52 @@ namespace System
     {
         Windows,
         Linux,
-        MacOS
+        MacOS,
+        Other
     };
+
+    enum Compiler
+    {
+        MSVC,
+        Gcc_Gxx,
+        Clang,
+        OtherCompiler
+    };
+
+    Platform GetPlatform();
+    Compiler GetCompiler();
 
     QString GetOSName();
     QString GetCompilerName();
 
 };
+
+namespace Reflex
+{
+    template <typename E>
+    concept EnumTypename = std::is_enum_v<E>;
+
+    template <typename T>
+    constexpr QString TemplateName()
+    {
+#if defined(__GNUC__) || defined(__clang__)
+        QString prettyFunction = __PRETTY_FUNCTION__;
+        auto start = prettyFunction.indexOf("T = ") + 4;
+        auto end = prettyFunction.lastIndexOf(']');
+        if (start > 4 && end > start)
+            { return prettyFunction.mid(start, end - start);}
+#elif defined(_MSC_VER)
+        const QString funcSig = __FUNCSIG__;
+        const auto begin = funcSig.indexOf('<') + 1;
+        const auto end = funcSig.lastIndexOf('>');
+        if (begin > 1 && end > begin) 
+            { return funcSig.mid(begin, end - begin); }
+#else
+        static_assert(false, "UnsupportedCompiler");
+#endif
+        return {};
+    }
+}
 
 class WindowHelper: public QObject
 {
