@@ -1,9 +1,12 @@
 #ifndef LOGINDIALOG_H
 #define LOGINDIALOG_H
 
-#include "ui/Window.h"
+#include <QLabel>
+
+#include "ui/MessageDialog.h"
 
 
+class QLabel;
 QT_BEGIN_NAMESPACE
 namespace Ui { class LoginDialog; }
 QT_END_NAMESPACE
@@ -11,29 +14,30 @@ QT_END_NAMESPACE
 class Client;
 class QEventLoop;
 
-class LoginDialog final : public Window {
-Q_OBJECT
-
+class LoginDialog final : public MessageDialog
+{
+    Q_OBJECT
 public:
     explicit LoginDialog(Client* client);
     ~LoginDialog() override;
 
     bool exec();
-
-    void Accept();
-    void Reject();
 private:
     Client* client;
     Ui::LoginDialog *ui;
-    int result = 0;
-    QEventLoop* loop = nullptr;
     bool mb_online = false;
-    void AUTH_FAILED(const QString& response);
-    void closeEvent(QCloseEvent* event) override;
+    QLabel* m_titleText;
+    void InitTitlebar();
+
+    void set_WindowTitle(const QString& title) override
+    {   m_titleText->setText(title); MessageDialog::set_WindowTitle(title); }
+private Q_SLOTS:
+    void AUTH(bool sucess, const QString& failed_response = {});
 public Q_SLOTS:
     void Client_onConnected();
     void Client_onDisconnected();
     void UI_onTryLogin() const;
+    void UI_onSettingsClicked();
 };
 
 

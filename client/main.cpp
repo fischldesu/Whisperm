@@ -47,6 +47,7 @@ int whisperm::run()
 
 void whisperm::quit()
 {
+    QApplication::setQuitOnLastWindowClosed(true);
     QApplication::closeAllWindows();
     QApplication::quit();
 }

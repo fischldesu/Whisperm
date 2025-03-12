@@ -124,7 +124,7 @@ void WindowHelper::InitWindowStyle(const int useSpecialBackdrop)
     if (!m_target) return;
     if (!mb_Initialized)
     {
-        m_target->setWindowFlags( Qt::FramelessWindowHint);
+        m_target->setWindowFlags( Qt::FramelessWindowHint | Qt::Window);
         mb_Initialized = true;
     }
 #if defined(Q_OS_WINDOWS)
@@ -181,39 +181,8 @@ bool WindowHelper::NativeEventHandler(const QByteArray &eventType, void *message
             break;
         }
 #elif defined(Q_OS_LINUX)
-    if (eventType == "xcb_generic_event_t")
-    {
-        xcb_generic_event_t *event = static_cast<xcb_generic_event_t *>(message);
-        const uint8_t type = event->response_type & ~0x80;
-        if (type == XCB_BUTTON_PRESS)
-        {
-            auto *press = reinterpret_cast<xcb_button_press_event_t *>(event);
-            Log(QString::number(press->event_x) + "X|Y" + QString::number(press->event_y), AppLog::LogLevel::Info);
-            QPoint localPos(press->event_x, press->event_y);
-
-            if (Caption(localPos))
-            { // 调用你的判断函数
-                m_dragStartPos = QPoint(press->root_x, press->root_y);
-                m_bDragging = true;
-                return true; // 拦截事件
-            }
-        }
-        else if (type == XCB_MOTION_NOTIFY && m_bDragging)
-        {
-
-            auto *move = reinterpret_cast<xcb_motion_notify_event_t *>(event);
-            QPoint newPos(move->root_x, move->root_y);
-            m_target->move(m_target->pos() + (newPos - m_dragStartPos));
-            m_dragStartPos = newPos;
-            return true;
-        }
-        else if (type == XCB_BUTTON_RELEASE)
-        {
-            m_bDragging = false;
-        }
-    }
 #endif
-    return false;
+    return m_target->QWidget::nativeEvent(eventType, message, result);
 }
 
 int WindowHelper::Border(const QPoint pos) const

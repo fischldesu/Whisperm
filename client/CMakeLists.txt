@@ -88,7 +88,7 @@ set(PROJECT_SOURCES
         ui/component/ChatBox.cpp
         ui/component/ChatMessage.cpp
         ui/component/Chat.cpp
-        ui/component/MessageDialog.cpp
+        ui/MessageDialog.cpp
         ui/component/SystemTrayMenu.cpp
 )
 

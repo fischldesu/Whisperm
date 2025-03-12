@@ -6,20 +6,21 @@
 
 class Window : public QWidget {
 Q_OBJECT
-
+    friend WindowHelper;
 public:
     explicit Window(QWidget *parent = nullptr, QWidget* custom_titlebar = nullptr, const QString& titleText = "");
     ~Window() override;
 
-    void setWindowTitle(const QString& title);
+    virtual void set_WindowTitle(const QString& title);
+    void set_CustomTitlebar(QWidget* titlebar);
 
     void set_Margins(const QMargins& margins);
     [[nodiscard]] QMargins get_Margins() const {return m_margin;}
 private:
-    WindowHelper m_helper;
-
     void InitializeWindow();
 protected:
+    WindowHelper m_helper;
+
     QWidget* centralWidget;
     QWidget* titlebarWidget;
 

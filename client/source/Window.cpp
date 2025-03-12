@@ -14,19 +14,28 @@ Window::Window(QWidget* parent, QWidget* custom_titlebar, const QString& titleTe
     QWidget(parent), m_helper(this),centralWidget(new QWidget(this)), titlebarWidget(custom_titlebar)
 {
     this->InitializeWindow();
-    this->setWindowTitle(titleText);
+    this->Window::set_WindowTitle(titleText);
 }
 
 Window::~Window() = default;
 
-void Window::setWindowTitle(const QString& title)
+void Window::set_WindowTitle(const QString& title)
 {
-    const auto titleWidget = qobject_cast<TitleBar*>(this->titlebarWidget);
-    if (titleWidget)
-    {
-        titleWidget->set_TitleText(title);
-    }
-    return QWidget::setWindowTitle(title);
+    if (const auto titlebarWidget_ = qobject_cast<TitleBar*>(this->titlebarWidget))
+        titlebarWidget_->set_TitleText(title);
+    return setWindowTitle(title);
+}
+
+void Window::set_CustomTitlebar(QWidget* titlebar)
+{
+    const auto old_Titlbar = this->titlebarWidget;
+    const auto resizeEvent = new QEvent(QEvent::Resize);
+    this->titlebarWidget = titlebar;
+    m_helper.set_titlebar(titlebar);
+    old_Titlbar->setParent(nullptr);
+    QApplication::sendEvent(this, resizeEvent);
+    delete old_Titlbar;
+    delete resizeEvent;
 }
 
 void Window::set_Margins(const QMargins& margins)

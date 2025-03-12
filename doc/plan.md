@@ -20,3 +20,11 @@
 # 已知的的问题
 - [ ] 新登录挤下线对方后会使其无法进行消息转发
 - [ ] 其他非恶性Bug
+
+# ISSUE
+- [ ] `#&hyw7ad5q` in `client/header/ui/MessageDialog.h(及其实现)` 
+- 构造函数：`MessageDialog(Type type, QWidget* parent);`（整个类）  
+当`MessageDialog`对象有父窗口时：`Window::nativeEvent`中：Windows不会分发`WM_NCHITTEST`等消息  
+导致无法拖动窗口，两个窗口基本没有交互能力  
+// 目前只能使用无父窗口、模态为ApplicationModal解决  
+// 并非`MessageDialog::exec`中局部变量事件循环导致  
