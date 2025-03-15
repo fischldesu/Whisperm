@@ -119,5 +119,4 @@ void LoginDialog::AUTH(const bool sucess, const QString& failed_response)
         return this->Accept();
 
     ui->label_information->setText("登录失败 " + failed_response);
-    Logger("Login Failed:" + failed_response, AppLogger::LogLevel::Warning);
 }

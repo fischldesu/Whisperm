@@ -6,12 +6,10 @@ int main(const int argc, char** argv)
     return app.run();
 }
 
-whisperm::whisperm(int argc, char** argv):app(argc, argv), logger(true)
+whisperm::whisperm(int argc, char** argv):app(argc, argv)
 {
     QApplication::setApplicationName(_AppName_);
     QApplication::setApplicationVersion(_AppVersion_);
-
-    AppLogger::set_Instance(&logger);
 
     this->client = new Client;
     this->InitTrayIcon();
@@ -40,9 +38,11 @@ int whisperm::run()
             m_trayIcon->show();
             QApplication::setQuitOnLastWindowClosed(false);
         }
-        return QApplication::exec();
     }
-    return 0;
+    else 
+        QTimer::singleShot(0, []{ whisperm::quit(); });
+        
+    return QApplication::exec();
 }
 
 void whisperm::quit()

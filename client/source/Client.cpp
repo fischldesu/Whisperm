@@ -59,7 +59,7 @@ void Client::timerEvent(QTimerEvent* event)
     if (m_timeout_counter <= 0)
     {
         emit ClientSignal_Timeout();
-        Logger("(client) Retry connect to Server." , AppLogger::LogLevel::Warning);
+        Log::Warning("Retrying connect to server.");
         this->Server_CloseWebSocket();
         this->Server_OpenWebSocket();
         m_timeout_counter = this->timeout_time;
@@ -79,7 +79,7 @@ void Client::set_State(const State state)
 
 void Client::Server_onConnect()
 {
-    Logger("(client) Connected:" + proxy_url.toString());
+    Log::Info("Connected to" + proxy_url.toString());
     m_state = State::Connected;
     emit ServerSignal_Connected();
 }
@@ -88,11 +88,11 @@ void Client::Server_onDisconnect()
 {
     if (m_state == State::Connecting)
     {
-        Logger("(client) Connection failed:" + proxy_url.toString(), AppLogger::LogLevel::Warning);
+        Log::Warning("Connection Failed:" + proxy_url.toString());
     }
     else if (m_state != State::Disconnected)
     {
-        Logger("(client) Disconnected:" + proxy_url.toString());
+        Log::Warning("Disconnected:" + proxy_url.toString());
         m_state = State::Disconnected;
         emit ServerSignal_Disconnected();
     }
@@ -123,18 +123,16 @@ void Client::Client_Login(const QString& uid, const QString& pwd)
             {"pubkey", RSAKeyPair.first}
         }}
     };
-    auto loginTimeout = new QTimer;
-    connect(loginTimeout, &QTimer::timeout, [this, loginTimeout]()
+    QTimer::singleShot(10000, [this]()
     {
         if (m_state == State::Authenticating)
         {
-            Logger("(client) Login Timeout.", AppLogger::LogLevel::Warning);
+            const QString response = "登录超时";
+            Log::Info(response);
             m_state = State::Connected;
-            emit this->ServerSignal_AuthResponse(false, "登录超时");
+            emit this->ServerSignal_AuthResponse(false, response);
         }
-        loginTimeout->deleteLater();
     });
-    loginTimeout->start(10000);
     const auto doc = QJsonDocument(json);
     m_ws.sendTextMessage(doc.toJson());
 }
@@ -164,7 +162,7 @@ void Client::Server_SendText(const QString& text) { m_ws.sendTextMessage(text); 
 
 void Client::Server_ConnectionTimeout()
 {
-    Logger("(client) Connection Timeout.", AppLogger::LogLevel::Warning);
+    Log::Warning("Connection Timeout.");
     if (m_state == State::Connected)
         this->Server_CloseWebSocket();
 }
@@ -174,7 +172,7 @@ void Client::Server_onRecviedText(const QString& text)
     const auto doc = QJsonDocument::fromJson(text.toUtf8());
     if (doc.isNull())
     {
-        Logger("(client) Invalid JSON", AppLogger::LogLevel::Warning);
+        Log::Warning("(WSRECV) Invalid JSON.");
         return;
     }
 
@@ -194,7 +192,7 @@ void Client::Server_onRecviedText(const QString& text)
         message.towhom = to;
         if (message.towhom != m_uid)
         {
-            Logger("(client) Not for this client:" + message.towhom, AppLogger::LogLevel::Warning);
+            Log::Info("(WSRECV)Unkonwn: target:" + message.towhom);
             message.towhom = "";
         }
 

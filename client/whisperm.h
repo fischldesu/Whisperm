@@ -22,10 +22,9 @@ public:
     ~whisperm();
 
     int run();
-
-public Q_SLOTS:
-    static void quit();
+    
     void display() const;
+    static void quit();
 private:
     void InitTrayIcon();
     QSystemTrayIcon* m_trayIcon = nullptr;
@@ -36,7 +35,6 @@ private:
     std::unique_ptr<MainWindow> mainWindow;
 
     QApplication app;
-    AppLogger logger;
 };
 
 

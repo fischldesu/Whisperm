@@ -52,7 +52,7 @@ void MainWindow::InitializeComponents()
     connect(m_client, &Client::ServerSignal_OnlineListChanged, this, &MainWindow::onOnlineList_Changed);
     connect(m_client, &Client::ServerSignal_LogoutResponse, [this](const QString& reason)
     {
-        Logger("(client) Logout:" + reason, AppLogger::LogLevel::Warning);
+        Log::Info("Logout: " + reason);
         this->close();
     });
     connect(ui->page_2, &PageContacts::DouleClicked, [this, uid](const QString& name)
