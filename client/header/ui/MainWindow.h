@@ -3,23 +3,21 @@
 
 #include "Window.h"
 
-class Button;
-class Client;
 QT_BEGIN_NAMESPACE
 namespace Ui
-{
-    class MainWindow;
-}
+{ class MainWindow; }
+QT_END_NAMESPACE
 namespace Data
 {
     struct Message;
 }
-QT_END_NAMESPACE
+class Button;
+class Client;
+
 
 class MainWindow final : public Window
 {
     Q_OBJECT
-
 public:
     explicit MainWindow(Client* client);
     ~MainWindow() override;

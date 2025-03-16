@@ -4,7 +4,8 @@
 #include <QMutex>
 #include <QQueue>
 #include <QString>
-#include "tools/Enum.h"
+
+#include "utils/Enum.h"
 
 class AppLog{
     Q_GADGET
@@ -17,8 +18,8 @@ public:
     { m_AsyncRunning.store(false); }
 
     static AppLog& UseInstance();
-    void Log(const QString& log, Level level, bool window, bool nofilew, bool async = true);
-    void Log_Async(const QString& log, bool noFileW);
+    int Log(const QString& log, Level level, bool window, bool nofilew);
+    void PushFileWriteQueue(const QString& log);
     static void ConsoelWrite(const QString& log);
 
 private:

@@ -2,7 +2,8 @@
 #include "ui_PageSettings.h"
 
 #include <QDesktopServices>
-#include "tools/multiplatform.hpp"
+
+#include "utils/multiplatform.hpp"
 
 PageSettings::PageSettings(QWidget *parent) :
     QWidget(parent), ui(new Ui::PageSettings) {

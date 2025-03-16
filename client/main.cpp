@@ -8,8 +8,8 @@ int main(const int argc, char** argv)
 
 whisperm::whisperm(int argc, char** argv):app(argc, argv)
 {
-    QApplication::setApplicationName(_AppName_);
-    QApplication::setApplicationVersion(_AppVersion_);
+    QApplication::setApplicationName(AppName_);
+    QApplication::setApplicationVersion(AppVersion_);
 
     this->client = new Client;
     this->InitTrayIcon();

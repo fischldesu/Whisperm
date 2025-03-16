@@ -1,13 +1,11 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
-#include <QSystemTrayIcon>
-#include <QtWebSockets/QtWebSockets>
 #include <QUrl>
+#include <QtWebSockets/QtWebSockets>
+#include "utils/Data.h"
 
-#include "tools/Data.h"
 
-#endif // CLIENT_H
 class Client final :public QObject
 {
     Q_OBJECT
@@ -77,3 +75,5 @@ Q_SIGNALS:
     void ClientSignal_SysTrayTrigger(int signal);
     void ClientSignal_Timeout();
 };
+
+#endif // CLIENT_H

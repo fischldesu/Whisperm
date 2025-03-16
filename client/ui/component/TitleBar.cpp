@@ -4,7 +4,8 @@
 #include <QApplication>
 #include <QResizeEvent>
 #include <QLabel>
-#include "uicomponent//Button.h"
+
+#include "uicomponent/Button.h"
 
 TitleBar::TitleBar(QWidget* parent):QWidget(parent), m_title(new QLabel(this))
 {

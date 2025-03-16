@@ -2,14 +2,16 @@
 #define TITLEBAR_H
 
 #include <QWidget>
+
 class QLabel;
 class Button;
+
 
 class TitleBar: public QWidget
 {
     Q_OBJECT
 public:
-    enum WindowBtn:int
+    enum WindowBtn
     {
         Close,
         Maximize,

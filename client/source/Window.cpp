@@ -2,12 +2,9 @@
 
 #include <QApplication>
 #include <QCloseEvent>
-#include <QEvent>
-#include <QOperatingSystemVersion>
 #include <QPainter>
 #include <QStyleOption>
 
-#include "tools/AppLog.h"
 #include "uicomponent/TitleBar.h"
 
 Window::Window(QWidget* parent, QWidget* custom_titlebar, const QString& titleText) :

@@ -1,10 +1,11 @@
-#include "tools/AppLog.h"
+#include "utils/AppLog.h"
 
 #include <iostream>
 #include <QApplication>
-#include <QtConcurrent/QtConcurrent>
+#include <QDateTime>
+#include <QFile>
 
-#include "tools/Task.h"
+#include "utils/Task.h"
 #include "ui/MessageDialog.h"
 
 AppLog::AppLog():m_AsyncRunning{false}
@@ -30,8 +31,7 @@ void AppLog::AsyncLogFile()
             QFile logFile("log-" + QDate::currentDate().toString() + ".log");
             if (logFile.open(QIODevice::Append | QIODevice::Text))
             {
-                QTextStream out(&logFile);
-                out << log << "\n";
+                QTextStream{&logFile} << log << "\n";
             }
             logFile.close();
             locker.relock();
@@ -44,9 +44,8 @@ void AppLog::ConsoelWrite(const QString& log)
     std::clog << log.toStdString() << std::endl;
 }
 
-void AppLog::Log_Async(const QString& log, bool noFileW)
+void AppLog::PushFileWriteQueue(const QString& log)
 {
-    ConsoelWrite(log);
     QMutexLocker locker(&m_Mutex_LogQueue);
     m_AsyncLogQueue.enqueue(log);
 }
@@ -57,15 +56,16 @@ AppLog& AppLog::UseInstance()
     return instance;
 }
 
-void AppLog::Log(const QString &log, const Level level, const bool window, const bool nofilew, bool async)
+int AppLog::Log(const QString& log, const Level level, const bool window, const bool nofilew)
 {
     const auto datetime = QDateTime::currentDateTime().toLocalTime().toString("MM-dd hh:mm:ss");
     const auto level_ = levelEnumertor.Name(level);
 
-    const auto log_ = datetime + " [" + level_ + "] " + log;
+    const auto log_ = datetime + " [" + level_.left(level_.size() - 1) + "] " + log;
     
     auto type = MessageDialog::Info;
     auto modal = false;
+    auto noFileWirte = nofilew;
 
     switch (level)
     {
@@ -75,26 +75,27 @@ void AppLog::Log(const QString &log, const Level level, const bool window, const
     case FATAL_:
         modal = true;
         m_AsyncRunning = false;
-        async = false;
+        noFileWirte = false;
         [[fallthrough]];
-    case ERROR:
+    case ERROR_:
         type = MessageDialog::Error;
         break;
     default:
         break;
     }
 
-    if(async)
-        Log_Async(log_, nofilew);
-    else
-        ConsoelWrite(log_);
+    ConsoelWrite(log_);
+
+    if(!noFileWirte)
+        PushFileWriteQueue(log_);
 
     if (window)
     {
         MessageDialog logDialog(type);
         logDialog.set_Content(log_);
-        logDialog.exec(modal);
+        return logDialog.exec(modal);
     }
+    return 0;
 }
 
 void Log::Log(const QString& log, const bool window, const bool nofilew)
@@ -103,13 +104,13 @@ void Log::Log(const QString& log, const bool window, const bool nofilew)
     logger.Log(log, AppLog::LOG_, window, nofilew);
 }
 
-void Log::Info(const QString& log, bool window, bool nofilew)
+void Log::Info(const QString& log, const bool window, const bool nofilew)
 {
     auto& logger = AppLog::UseInstance();
     logger.Log(log, AppLog::INFO_, window, nofilew);
 }
 
-void Log::Warning(const QString& log, bool window, bool nofilew)
+void Log::Warning(const QString& log, const bool window, const bool nofilew)
 {
     auto& logger = AppLog::UseInstance();
     logger.Log(log, AppLog::WARN_, window, nofilew);
@@ -118,10 +119,7 @@ void Log::Warning(const QString& log, bool window, bool nofilew)
 void Log::Error(const QString& log)
 {
     auto& logger = AppLog::UseInstance();
-#pragma push_macro("ERROR")
-#undef ERROR
     logger.Log(log, AppLog::ERROR_, true, false);
-#pragma pop_macro("ERROR")
 }
 
 void Log::Fatal(const QString& log)

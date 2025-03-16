@@ -2,9 +2,12 @@
 #define CHATITEM_H
 
 #include <QWidget>
+
 class QLabel;
 class QDateTime;
 class QPropertyAnimation;
+
+
 class ChatListItem final : public QWidget{
     Q_OBJECT
     Q_PROPERTY(int bgOpacity READ get_bgOpacity WRITE set_bgOpacity)

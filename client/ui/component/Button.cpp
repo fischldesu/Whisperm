@@ -2,7 +2,8 @@
 
 #include <QPaintEvent>
 #include <QPropertyAnimation>
-#include "tools/Style.h"
+
+#include "utils/Style.h"
 
 Button::Button(QWidget* parent) : QPushButton(parent)
 {

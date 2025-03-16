@@ -1,15 +1,19 @@
-#include "tools/Data.h"
+#include "utils/Data.h"
 
-#include "tools/AppLog.h"
+#include "utils/Cryptology.h"
 
 QString Data::RSA::EncryptMessage(const QString& plainText, const QString& publicKey)
 {
-    return "txt/" + plainText + "/endtxt";
+    const auto result = plainText;
+
+    return "txt/" + result + "/endtxt";
 }
 
 QString Data::RSA::DecryptMessage(const QString& cipherText, const QString& privateKey)
 {
-    if (cipherText.startsWith("txt/") && cipherText.endsWith("/endtxt"))
-        return cipherText.mid(4, cipherText.size() - 11);
+    const auto result = cipherText;
+
+    if (result.startsWith("txt/") && result.endsWith("/endtxt"))
+        return result.mid(4, result.size() - 11);
     return {};
 }

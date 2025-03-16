@@ -3,9 +3,10 @@
 
 #include <QPainter>
 #include <QPainterPath>
+
 #include "Client.h"
-#include "tools/AppLog.h"
-#include "tools/Data.h"
+#include "utils/AppLog.h"
+#include "utils/Data.h"
 #include "uicomponent/ChatListItem.h"
 
 MainWindow::MainWindow(Client* client) :

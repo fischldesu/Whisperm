@@ -21,26 +21,22 @@ public:
     std::size_t Count() const
     { return data.keyCount(); }
 
-    E Map(const QByteArray& name);
-    QByteArray Name (E value);
+    [[nodiscard("Returns Value Only")]]
+    E Map(const QByteArray& name)
+    { return map.value(name, static_cast<E>(-1)); }
 
+    [[nodiscard("Returns Name Only")]]
+    QByteArray Name (E value)
+    { return data.valueToKey(static_cast<underlyingType<E>>(value)); }
 private:
     QMetaEnum data;
     QMap<QByteArray, E> map;
 };
 
-template <EnumTypename E>
-E Enum<E>::Map(const QByteArray& name)
-{ return map.value(name, static_cast<E>(-1)); }
-
-template <EnumTypename E>
-QByteArray Enum<E>::Name(const E value)
-{ return data.valueToKey(static_cast<underlyingType<E>>(value)); }
-
 namespace Reflex
 {
     template <EnumTypename E>
-    [[nodiscard("Returns MemberCount Only")]]
+    [[nodiscard("Returns EnumMemberCount Only")]]
     std::size_t Enum_Count()
     { return QMetaEnum::fromType<E>().keyCount(); }
 

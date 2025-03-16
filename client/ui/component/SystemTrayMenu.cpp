@@ -4,8 +4,9 @@
 #include <QPaintEvent>
 #include <QWidgetAction>
 #include <QSystemTrayIcon>
+
+#include "utils/Style.h"
 #include "uicomponent/Button.h"
-#include "tools/Style.h"
 
 SystemTrayMenu::SystemTrayMenu(QSystemTrayIcon* trayIcon):m_trayIcon(trayIcon)
 {

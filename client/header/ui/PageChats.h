@@ -2,17 +2,17 @@
 #define PAGECHATS_H
 
 #include <QWidget>
-class Chat;
 
+QT_BEGIN_NAMESPACE
+namespace Ui { class PageChats; }
+QT_END_NAMESPACE
 namespace Data
 {
     struct Message;
 }
+class Chat;
 class QLabel;
 class ChatListItem;
-QT_BEGIN_NAMESPACE
-namespace Ui { class PageChats; }
-QT_END_NAMESPACE
 
 class PageChats : public QWidget {
 Q_OBJECT

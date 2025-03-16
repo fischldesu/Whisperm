@@ -11,6 +11,8 @@ namespace Data
 class QLabel;
 class Chat;
 class GroupChat;
+
+
 template<typename T>
 concept ChatType = std::is_same_v<T, FriendChat> || std::is_same_v<T, GroupChat>;
 

@@ -1,11 +1,4 @@
-#include "tools/multiplatform.hpp"
-#include "ui/Window.h"
-
-#if defined(Q_OS_WINDOWS) && !defined(_MSC_VER)
-HMODULE dwmapi = LoadLibrary(L"dwmapi.dll");
-const PDWMFN DwmExtendFrameIntoClientArea = reinterpret_cast<PDWMFN>(GetProcAddress(dwmapi, "DwmExtendFrameIntoClientArea"));
-const PDWMSETATTR DwmSetWindowAttribute = reinterpret_cast<PDWMSETATTR>(GetProcAddress(dwmapi, "DwmSetWindowAttribute"));
-#endif
+#include "utils/multiplatform.hpp"
 
 #include <QApplication>
 #include <QWidget>
@@ -13,8 +6,13 @@ const PDWMSETATTR DwmSetWindowAttribute = reinterpret_cast<PDWMSETATTR>(GetProcA
 #include <QPushButton>
 #include <QStyle>
 
-#include "../header/tools/AppLog.h"
+#include "ui/Window.h"
 
+#if defined(Q_OS_WINDOWS) && !defined(_MSC_VER)
+HMODULE dwmapi = LoadLibrary(L"dwmapi.dll");
+const PDWMFN DwmExtendFrameIntoClientArea = reinterpret_cast<PDWMFN>(GetProcAddress(dwmapi, "DwmExtendFrameIntoClientArea"));
+const PDWMSETATTR DwmSetWindowAttribute = reinterpret_cast<PDWMSETATTR>(GetProcAddress(dwmapi, "DwmSetWindowAttribute"));
+#endif
 
 System::Platform System::GetPlatform()
 {
@@ -219,21 +217,6 @@ bool WindowHelper::Caption(const QPoint pos) const
         }
     }
     return result;
-}
-
-int WindowHelper::get_padding() const
-{
-    return m_padding;
-}
-
-QWidget *WindowHelper::get_titlebar() const
-{
-    return m_titlebar;
-}
-
-QColor WindowHelper::bgColor() const
-{
-    return m_bgColor;
 }
 
 void WindowHelper::set_titlebar(QWidget *titlebar)

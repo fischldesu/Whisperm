@@ -5,6 +5,7 @@
 
 class QTextEdit;
 
+
 class ChatMessage final : public QWidget{
     Q_OBJECT
 public:

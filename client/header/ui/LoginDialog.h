@@ -2,17 +2,14 @@
 #define LOGINDIALOG_H
 
 #include <QLabel>
-
 #include "ui/MessageDialog.h"
 
-
-class QLabel;
 QT_BEGIN_NAMESPACE
 namespace Ui { class LoginDialog; }
 QT_END_NAMESPACE
-
 class Client;
 class QEventLoop;
+
 
 class LoginDialog final : public MessageDialog
 {

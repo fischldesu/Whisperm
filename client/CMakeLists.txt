@@ -31,16 +31,16 @@ set(Headers
         header/ui/PageSettings.h
         header/ui/MessageDialog.h
 
-        header/tools/multiplatform.hpp
-        header/tools/Data.h
-        header/tools/AppLog.h
-        header/tools/Media.h
-        header/tools/Style.h
-        header/tools/Task.h
-        header/tools/Animation.h
-        header/tools/Cryptology.h
-        header/tools/BigInteger.h
-        header/tools/Enum.h
+        header/utils/multiplatform.hpp
+        header/utils/Data.h
+        header/utils/AppLog.h
+        header/utils/Media.h
+        header/utils/Style.h
+        header/utils/Task.h
+        header/utils/Animation.h
+        header/utils/Cryptology.h
+        header/utils/BigInteger.h
+        header/utils/Enum.h
 
         header/uicomponent/TitleBar.h
         header/uicomponent/MainContainer.h

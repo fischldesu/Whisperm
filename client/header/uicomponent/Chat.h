@@ -2,12 +2,14 @@
 #define CHAT_H
 
 #include "uicomponent/ChatMessage.h"
-class ChatBox;
-class QSpacerItem;
+
 namespace Data
 {
     struct Message;
 }
+class ChatBox;
+class QSpacerItem;
+
 
 class Chat:public QWidget{
     Q_OBJECT

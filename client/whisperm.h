@@ -2,18 +2,19 @@
 #define WHISPEM_H
 
 #include <QApplication>
+
 #include "Client.h"
-#include "tools/AppLog.h"
+#include "utils/AppLog.h"
 #include "ui/LoginDialog.h"
 #include "ui/MainWindow.h"
 #include "uicomponent/Button.h"
 #include "uicomponent/SystemTrayMenu.h"
 
-#ifndef _AppName_
-#define _AppName_ "Whisperm"
+#ifndef AppName_
+#define AppName_ "Whisperm"
 #endif
-#ifndef _AppVersion_
-#define _AppVersion_ "0.0.1(alpha)p1"
+#ifndef AppVersion_
+#define AppVersion_ "0.0.1(alpha)p1"
 #endif
 
 class whisperm {

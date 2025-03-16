@@ -71,9 +71,9 @@ namespace Reflex
     constexpr QString TemplateName()
     {
 #if defined(__GNUC__) || defined(__clang__)
-        QString prettyFunction = __PRETTY_FUNCTION__;
-        auto start = prettyFunction.indexOf("T = ") + 4;
-        auto end = prettyFunction.lastIndexOf(']');
+        const QString prettyFunction = __PRETTY_FUNCTION__;
+        const auto start = prettyFunction.indexOf("T = ") + 4;
+        const auto end = prettyFunction.lastIndexOf(']');
         if (start > 4 && end > start)
             { return prettyFunction.mid(start, end - start);}
 #elif defined(_MSC_VER)
@@ -108,19 +108,23 @@ public:
     [[nodiscard]] int Border(QPoint pos) const;
     [[nodiscard]] bool Caption(QPoint pos) const;
 
-    [[nodiscard]] int get_padding() const;
-    [[nodiscard]] QWidget*  get_titlebar() const;
-    [[nodiscard]] QColor bgColor() const;
-
     void set_padding(int padding);
+    [[nodiscard]] int get_padding() const
+    { return m_padding; }
+
     void set_titlebar(QWidget* titlebar);
+    [[nodiscard]] QWidget*  get_titlebar() const
+    { return m_titlebar; }
+
+    [[nodiscard]] QColor bgColor() const
+    { return m_bgColor; }
 
     static PreferedTheme GetSystemTheme();
 
 private:
-    Window* m_target{};
-    QWidget* m_titlebar{};
-    int m_padding;
+    Window* m_target = nullptr;
+    QWidget* m_titlebar = nullptr;
+    int m_padding = 0;
     bool mb_Initialized = false;
     QColor m_bgColor;
     #if defined(Q_OS_LINUX)

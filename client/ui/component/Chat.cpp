@@ -1,8 +1,9 @@
 #include "uicomponent/Chat.h"
 
 #include <QVBoxLayout>
+
+#include "utils/Data.h"
 #include "uicomponent/ChatBox.h"
-#include "tools/Data.h"
 
 Chat::Chat(ChatBox* parent):QWidget(parent), mb_GroupChat(false), m_parent(parent)
 {

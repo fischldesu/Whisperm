@@ -3,9 +3,9 @@
 #include <QLabel>
 #include <QLayout>
 #include <QPainter>
+
 #include "Client.h"
-#include "tools/Data.h"
-#include "tools/AppLog.h"
+#include "utils/Data.h"
 
 ChatBox::ChatBox(QWidget* parent):QWidget(parent),m_current(nullptr),m_splashScreen(new QWidget(this))
 {
@@ -18,7 +18,7 @@ ChatBox::ChatBox(QWidget* parent):QWidget(parent),m_current(nullptr),m_splashScr
 
 void ChatBox::AppendMessage(const Data::Message& message)
 {
-    const auto key = (message.from == m_UID_client) ? message.towhom : message.from;
+    const auto key = (message.from == m_UID_client) ? message.target : message.from;
     Chat* chat = m_ChatMap.value(key, nullptr);
     if (!chat)
     {

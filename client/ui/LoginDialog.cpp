@@ -3,10 +3,11 @@
 
 #include <QRegularExpressionValidator>
 #include <QCloseEvent>
+
 #include "Client.h"
-#include "uicomponent/Button.h"
-#include "tools/AppLog.h"
+#include "utils/AppLog.h"
 #include "ui/PageSettings.h"
+#include "uicomponent/Button.h"
 
 LoginDialog::LoginDialog(Client* client) :
     MessageDialog(Window, nullptr)

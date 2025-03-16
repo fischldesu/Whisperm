@@ -2,9 +2,11 @@
 #define SYSTEMTRAYMENU_H
 
 #include <QMenu>
-#include <qsystemtrayicon.h>
+#include <QSystemTrayIcon>
+
 class Button;
 class QSystemTrayIcon;
+
 
 class SystemTrayMenu:public QObject{
     Q_OBJECT

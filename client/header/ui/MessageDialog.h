@@ -2,6 +2,7 @@
 #define MESSAGEDIALOG_H
 
 #include "ui/Window.h"
+
 class QEventLoop;
 class MessageDialogTitlebar;
 

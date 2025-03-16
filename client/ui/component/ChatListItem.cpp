@@ -4,7 +4,8 @@
 #include <QLabel>
 #include <QMouseEvent>
 #include <QPropertyAnimation>
-#include "tools/Style.h"
+
+#include "utils/Style.h"
 
 ChatListItem::ChatListItem(QWidget* parent, const QString& from, const QString& content, const QDateTime& time)
 :QWidget(parent), uid(new QLabel(this)), content(new QLabel(this)), time(new QLabel(this)),m_anim_bgOpacity(nullptr)

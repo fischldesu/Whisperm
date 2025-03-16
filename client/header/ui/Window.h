@@ -2,7 +2,7 @@
 #define WINDOW_H
 
 #include <QWidget>
-#include "tools/multiplatform.hpp"
+#include "utils/multiplatform.hpp"
 
 class Window : public QWidget {
 Q_OBJECT

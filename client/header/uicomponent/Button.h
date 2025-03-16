@@ -3,11 +3,12 @@
 
 #include <QPropertyAnimation>
 #include <QPushButton>
+#include "utils/AppLog.h"
+#include "utils/Style.h"
 
-#include "tools/AppLog.h"
-#include "tools/Style.h"
 class QLabel;
 class QPropertyAnimation;
+
 
 class Button : public QPushButton{
     Q_OBJECT

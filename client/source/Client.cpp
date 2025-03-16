@@ -3,7 +3,8 @@
 #include <QApplication>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include "tools/AppLog.h"
+
+#include "utils/AppLog.h"
 
 Client::Client(QObject* parent, const QUrl& proxy) :
     QObject(parent), server_url("wss://server.fischldesu.com/whisperm"), m_state(State::Disconnected),
@@ -144,13 +145,13 @@ void Client::Client_Logout()
 
 void Client::Client_ForwardMessage(const Data::Message& message)
 {
-    const auto& text = Data::RSA::EncryptMessage(message.text, onlineList[message.towhom.toLocal8Bit()]);
+    const auto& text = Data::RSA::EncryptMessage(message.text, onlineList[message.target.toLocal8Bit()]);
     const auto json = QJsonObject{
         {"type", "msg"},
         {"data", QJsonObject{
             {"msg", text},
             {"from", message.from},
-            {"to", message.towhom},
+            {"to", message.target},
             {"time", message.time.toSecsSinceEpoch()}
         }}
     };
@@ -189,11 +190,11 @@ void Client::Server_onRecviedText(const QString& text)
         message.text = Data::RSA::DecryptMessage(text, RSAKeyPair.second);
         message.time = QDateTime::fromSecsSinceEpoch(time);
         message.from = from;
-        message.towhom = to;
-        if (message.towhom != m_uid)
+        message.target = to;
+        if (message.target != m_uid)
         {
-            Log::Info("(WSRECV)Unkonwn: target:" + message.towhom);
-            message.towhom = "";
+            Log::Info("(WSRECV)Unkonwn: target:" + message.target);
+            message.target = "";
         }
 
         emit this->ServerSignal_RecviedMessage(message);

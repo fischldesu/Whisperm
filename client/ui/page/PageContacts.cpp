@@ -2,6 +2,7 @@
 #include "ui_PageContacts.h"
 
 #include <QListWidgetItem>
+
 #include "ui/LoginDialog.h"
 
 PageContacts::PageContacts(QWidget *parent) :

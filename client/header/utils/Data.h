@@ -1,9 +1,7 @@
 #ifndef DATA_H
 #define DATA_H
 
-#include <QString>
 #include <QDateTime>
-#include <QSettings>
 
 namespace Data
 {
@@ -12,7 +10,7 @@ namespace Data
         QString text;
         QDateTime time;
         QString from;
-        QString towhom;
+        QString target;
     };
 
     namespace RSA
