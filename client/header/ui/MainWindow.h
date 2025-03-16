@@ -38,6 +38,7 @@ private:
     Button* m_menubarBtns[Count];
     void InitializeComponents();
 
+    void showEvent(QShowEvent* event) override;
     void resizeEvent(QResizeEvent* event) override;
     bool eventFilter(QObject* watched, QEvent* event) override;
 public Q_SLOTS:

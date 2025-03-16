@@ -82,6 +82,12 @@ void MainWindow::InitializeComponents()
     this->UpdateContentSize();
 }
 
+void MainWindow::showEvent(QShowEvent* event)
+{
+    Window::showEvent(event);
+    this->UpdateContentSize();
+}
+
 void MainWindow::UpdateContentSize() const
 {
     const auto height = ui->mainContent->height();

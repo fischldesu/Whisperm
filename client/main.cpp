@@ -6,12 +6,12 @@ int main(const int argc, char** argv)
     return app.run();
 }
 
-whisperm::whisperm(int argc, char** argv):app(argc, argv)
+whisperm::whisperm(int argc, char** argv)
+    :app(argc, argv), client(new Client)
 {
     QApplication::setApplicationName(AppName_);
     QApplication::setApplicationVersion(AppVersion_);
 
-    this->client = new Client;
     this->InitTrayIcon();
 }
 
@@ -24,20 +24,18 @@ whisperm::~whisperm()
 
 int whisperm::run()
 {
-    loginDialog = std::make_unique<LoginDialog>(this->client);
-    if (loginDialog->exec())
+    if (std::make_unique<LoginDialog>(this->client)->exec())
     {
-        loginDialog.reset();
-
         mainWindow = std::make_unique<MainWindow>(this->client);
-        mainWindow->show();
-        mainWindow->UpdateContentSize();
+
         if (m_trayIcon)
         {
             m_trayIcon->setToolTip(QApplication::applicationName()+ "\nUID: " + client->get_UID());
             m_trayIcon->show();
             QApplication::setQuitOnLastWindowClosed(false);
         }
+
+        mainWindow->show();
     }
     else 
         QTimer::singleShot(0, []{ whisperm::quit(); });

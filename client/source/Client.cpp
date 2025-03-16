@@ -5,6 +5,7 @@
 #include <QJsonObject>
 
 #include "utils/AppLog.h"
+#include "utils/Cryptology.h"
 
 Client::Client(QObject* parent, const QUrl& proxy) :
     QObject(parent), server_url("wss://server.fischldesu.com/whisperm"), m_state(State::Disconnected),
@@ -121,10 +122,10 @@ void Client::Client_Login(const QString& uid, const QString& pwd)
         {"data", QJsonObject{
             {"uid", uid},
             {"pwd", pwd},
-            {"pubkey", RSAKeyPair.first}
+            {"pubkey", QString::fromUtf8(RSAKeyPair.first)}
         }}
     };
-    QTimer::singleShot(10000, [this]()
+    QTimer::singleShot(10000, [this]
     {
         if (m_state == State::Authenticating)
         {
@@ -145,11 +146,11 @@ void Client::Client_Logout()
 
 void Client::Client_ForwardMessage(const Data::Message& message)
 {
-    const auto& text = Data::RSA::EncryptMessage(message.text, onlineList[message.target.toLocal8Bit()]);
+    const auto& text = Crypto::RSA::EncryptMessage(message.text.toUtf8(), onlineList[message.target.toLocal8Bit()]);
     const auto json = QJsonObject{
         {"type", "msg"},
         {"data", QJsonObject{
-            {"msg", text},
+            {"msg", QString::fromUtf8(text)},
             {"from", message.from},
             {"to", message.target},
             {"time", message.time.toSecsSinceEpoch()}
@@ -179,15 +180,15 @@ void Client::Server_onRecviedText(const QString& text)
 
     const auto json = doc.object();
 
-    const auto Recv_Message = [this, json]()
+    const auto Recv_Message = [this, json]
     {
         Data::Message message;
         const auto data = json["data"];
-        const auto text = data["msg"].toString();
+        const auto text_ = data["msg"].toString();
         const auto time = data["time"].toInt(0);
         const auto from = data["from"].toString();
         const auto to = data["to"].toString();
-        message.text = Data::RSA::DecryptMessage(text, RSAKeyPair.second);
+        message.text = Crypto::RSA::DecryptMessage(text_.toUtf8(), RSAKeyPair.second);
         message.time = QDateTime::fromSecsSinceEpoch(time);
         message.from = from;
         message.target = to;
@@ -199,7 +200,7 @@ void Client::Server_onRecviedText(const QString& text)
 
         emit this->ServerSignal_RecviedMessage(message);
     };
-    const auto Recv_LoginAuth = [this, json]()
+    const auto Recv_LoginAuth = [this, json]
     {
         bool success = false;
         const auto response = json["data"];
@@ -209,7 +210,7 @@ void Client::Server_onRecviedText(const QString& text)
         emit this->ServerSignal_AuthResponse(success, response["result"].toString());
     };
 
-    const auto Recv_OnlineList = [this, json]()
+    const auto Recv_OnlineList = [this, json]
     {
         const auto online_list = json["data"].toArray();
         onlineList.clear();
@@ -222,7 +223,7 @@ void Client::Server_onRecviedText(const QString& text)
         emit ServerSignal_OnlineListChanged();
     };
 
-    const auto Recv_Logout = [this, json]()
+    const auto Recv_Logout = [this, json]
     {
         const auto reason = json["data"];
         if (reason == "LOGIN_ELSEWHERE")

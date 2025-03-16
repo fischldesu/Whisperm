@@ -89,45 +89,48 @@ namespace Reflex
     }
 }
 
-class WindowHelper: public QObject
+class NativeWindowHelper final : public QObject
 {
     Q_OBJECT
 public:
-    enum class PreferedTheme {
+    enum class Theme {
         Dark,
-        Light,
-        Auto
+        Light
     };
-    explicit WindowHelper(Window *target, QObject* parent = nullptr);
-    ~WindowHelper() override;
+    explicit NativeWindowHelper(Window *target, QObject* parent = nullptr);
+    ~NativeWindowHelper() override;
 
     void InitWindowStyle(int useSpecialBackdrop = 0);
     void SetWindowDarkMode(bool dark) const;
-    bool NativeEventHandler(const QByteArray &eventType, void *message, qintptr *result);
+    bool EventHandler_NativeEvent(const QByteArray &eventType, void *message, qintptr *result);
 
-    [[nodiscard]] int Border(QPoint pos) const;
-    [[nodiscard]] bool Caption(QPoint pos) const;
+    [[nodiscard]]
+    int Border(QPoint pos) const;
+    [[nodiscard]]
+    bool Caption(QPoint pos) const;
 
-    void set_padding(int padding);
+    void set_padding(const int padding)
+    { if (padding > 0) m_padding = padding; }
     [[nodiscard]] int get_padding() const
     { return m_padding; }
 
-    void set_titlebar(QWidget* titlebar);
+    void set_titlebar(QWidget* titlebar)
+    { m_titlebar = titlebar; }
     [[nodiscard]] QWidget*  get_titlebar() const
     { return m_titlebar; }
 
-    [[nodiscard]] QColor bgColor() const
+    [[nodiscard]] QColor get_bgColor() const
     { return m_bgColor; }
 
-    static PreferedTheme GetSystemTheme();
+    static Theme GetSystemTheme();
 
 private:
     Window* m_target = nullptr;
     QWidget* m_titlebar = nullptr;
+    QColor m_bgColor;
     int m_padding = 0;
     bool mb_Initialized = false;
-    QColor m_bgColor;
-    #if defined(Q_OS_LINUX)
+#if defined(Q_OS_LINUX)
 
     #endif
 };

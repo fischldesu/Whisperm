@@ -13,12 +13,6 @@ namespace Data
         QString target;
     };
 
-    namespace RSA
-    {
-        QString EncryptMessage(const QString& plainText, const QString& publicKey);
-        QString DecryptMessage(const QString& cipherText, const QString& privateKey);
-    }
-
 } // namespace Data
 
 #endif //DATA_H

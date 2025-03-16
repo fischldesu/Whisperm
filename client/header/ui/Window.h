@@ -2,11 +2,11 @@
 #define WINDOW_H
 
 #include <QWidget>
-#include "utils/multiplatform.hpp"
+#include "utils/Multiplatform.hpp"
 
 class Window : public QWidget {
 Q_OBJECT
-    friend WindowHelper;
+    friend NativeWindowHelper;
 public:
     explicit Window(QWidget *parent = nullptr, QWidget* custom_titlebar = nullptr, const QString& titleText = "");
     ~Window() override;
@@ -19,7 +19,7 @@ public:
 private:
     void InitializeWindow();
 protected:
-    WindowHelper m_helper;
+    NativeWindowHelper m_helper;
 
     QWidget* centralWidget;
     QWidget* titlebarWidget;

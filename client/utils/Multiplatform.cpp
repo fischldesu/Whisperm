@@ -1,4 +1,4 @@
-#include "utils/multiplatform.hpp"
+#include "utils/Multiplatform.hpp"
 
 #include <QApplication>
 #include <QWidget>
@@ -107,7 +107,7 @@ QString System::GetCompilerName()
     return name;
 }
 
-WindowHelper::WindowHelper(Window *target, QObject *parent) : QObject(parent), m_target(target), m_padding(8)
+NativeWindowHelper::NativeWindowHelper(Window *target, QObject *parent) : QObject(parent), m_target(target), m_padding(8)
 {
     if (m_target)
     {
@@ -115,9 +115,9 @@ WindowHelper::WindowHelper(Window *target, QObject *parent) : QObject(parent), m
     }
 }
 
-WindowHelper::~WindowHelper() = default;
+NativeWindowHelper::~NativeWindowHelper() = default;
 
-void WindowHelper::InitWindowStyle(const int useSpecialBackdrop)
+void NativeWindowHelper::InitWindowStyle(const int useSpecialBackdrop)
 {
     if (!m_target) return;
     if (!mb_Initialized)
@@ -139,12 +139,14 @@ void WindowHelper::InitWindowStyle(const int useSpecialBackdrop)
 #endif
 }
 
-void WindowHelper::SetWindowDarkMode(const bool dark) const
+void NativeWindowHelper::SetWindowDarkMode(const bool dark) const
 {
+#if defined(Q_OS_WINDOWS)
 
+#endif
 }
 
-bool WindowHelper::NativeEventHandler(const QByteArray &eventType, void *message, qintptr *result)
+bool NativeWindowHelper::EventHandler_NativeEvent(const QByteArray &eventType, void *message, qintptr *result)
 {
     if (!m_target)
         return false;
@@ -183,7 +185,7 @@ bool WindowHelper::NativeEventHandler(const QByteArray &eventType, void *message
     return m_target->QWidget::nativeEvent(eventType, message, result);
 }
 
-int WindowHelper::Border(const QPoint pos) const
+int NativeWindowHelper::Border(const QPoint pos) const
 {
     const bool l = pos.x() < m_padding;
     const bool t = pos.y() < m_padding;
@@ -200,7 +202,7 @@ int WindowHelper::Border(const QPoint pos) const
                       : 0;
 }
 
-bool WindowHelper::Caption(const QPoint pos) const
+bool NativeWindowHelper::Caption(const QPoint pos) const
 {
     bool result = false;
     if (m_titlebar)
@@ -219,21 +221,10 @@ bool WindowHelper::Caption(const QPoint pos) const
     return result;
 }
 
-void WindowHelper::set_titlebar(QWidget *titlebar)
+NativeWindowHelper::Theme NativeWindowHelper::GetSystemTheme()
 {
-    m_titlebar = titlebar;
-}
-
-WindowHelper::PreferedTheme WindowHelper::GetSystemTheme()
-{
-    const auto windowColor = QApplication::palette().color(QPalette::Window);
-    return ((windowColor.red() * 299 + windowColor.green() * 587 + windowColor.blue() * 114) / 1000) < 128
-               ? PreferedTheme::Dark
-               : PreferedTheme::Light;
-}
-
-void WindowHelper::set_padding(const int padding)
-{
-    if (padding > 0)
-        m_padding = padding;
+    const auto color = QApplication::palette().color(QPalette::Window);
+    if ((color.red() * 299 + color.green() * 587 + color.blue() * 114) / 1000 < 128)
+        return Theme::Dark;
+    return Theme::Light;
 }

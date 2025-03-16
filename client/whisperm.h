@@ -23,19 +23,19 @@ public:
     ~whisperm();
 
     int run();
-    
     void display() const;
+
     static void quit();
 private:
     void InitTrayIcon();
-    QSystemTrayIcon* m_trayIcon = nullptr;
-    SystemTrayMenu* m_trayMenu = nullptr;
-    Client* client;
-//window
-    std::unique_ptr<LoginDialog> loginDialog;
-    std::unique_ptr<MainWindow> mainWindow;
 
     QApplication app;
+    Client* client;
+
+    QSystemTrayIcon* m_trayIcon = nullptr;
+    SystemTrayMenu* m_trayMenu = nullptr;
+
+    std::unique_ptr<MainWindow> mainWindow;
 };
 
 

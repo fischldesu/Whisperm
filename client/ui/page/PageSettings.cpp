@@ -3,7 +3,7 @@
 
 #include <QDesktopServices>
 
-#include "utils/multiplatform.hpp"
+#include "utils/Multiplatform.hpp"
 
 PageSettings::PageSettings(QWidget *parent) :
     QWidget(parent), ui(new Ui::PageSettings) {

@@ -94,7 +94,7 @@ void Window::paintEvent(QPaintEvent* event)
     opt.initFrom(this);
     painter.setCompositionMode(QPainter::CompositionMode_Source);
 
-    painter.fillRect(this->rect(), m_helper.bgColor());
+    painter.fillRect(this->rect(), m_helper.get_bgColor());
     style()->drawPrimitive(QStyle::PE_Widget, &opt, &painter, this);
     QWidget::paintEvent(event);
 }
@@ -121,5 +121,5 @@ void Window::showEvent(QShowEvent* event)
 
 bool Window::nativeEvent(const QByteArray& eventType, void* message, qintptr* result)
 {
-    return m_helper.NativeEventHandler(eventType, message, result);
+    return m_helper.EventHandler_NativeEvent(eventType, message, result);
 }

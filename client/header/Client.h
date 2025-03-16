@@ -40,7 +40,7 @@ private:
     int m_timeout_counter;
     int timeout_time;
 
-    QPair<QString, QString> RSAKeyPair;
+    QPair<QByteArray, QByteArray> RSAKeyPair;
 
     void Initialize();
     void set_UID(const QByteArray& uid);
