@@ -2,8 +2,9 @@
 #include "ui_PageSettings.h"
 
 #include <QDesktopServices>
-
+#include <QCheckBox>
 #include "utils/Multiplatform.hpp"
+#include "uicomponent/Panel.h"
 
 PageSettings::PageSettings(QWidget *parent) :
     QWidget(parent), ui(new Ui::PageSettings) {
@@ -36,12 +37,23 @@ PageSettings::~PageSettings() {
 
 void PageSettings::InitialzieComponents()
 {
+    const auto panel1 = new Panel(this);
+    const auto checker1 = new QCheckBox(panel1);
+    checker1->setText(" ");
+    panel1->set_Controler(checker1);
+    panel1->set_Content({"在系统后台运行程序", "窗口关闭时不退出程序，并在系统托盘显示图标"});
+    this->AddComponent(panel1);
 
+    const auto panel2 = new Panel(this);
+    const auto checker2 = new QCheckBox(panel2);
+    checker2->setText(" ");
+    panel2->set_Controler(checker2);
+    panel2->set_Content({"不使用背景样式", "禁用窗口背景样式以提高性能"});
+    this->AddComponent(panel2);
 }
 
-void PageSettings::AddCompoents(SettingsComponent* component)
+void PageSettings::AddComponent(Panel* component)
 {
     const auto index = ui->contentLayout->indexOf(ui->vspacer);
-    // ui->contentLayout->insertWidget(index, component);
+    ui->contentLayout->insertWidget(index, component);
 }
-

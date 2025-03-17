@@ -2,7 +2,7 @@
 #define PAGESETTINGS_H
 
 #include <QWidget>
-class SettingsComponent;
+class Panel;
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class PageSettings; }
@@ -17,9 +17,9 @@ public:
 
     void InitialzieComponents();
 private:
-    void AddCompoents(SettingsComponent* component);
-
     Ui::PageSettings *ui;
+
+    void AddComponent(Panel* component);
 };
 
 #endif //PAGESETTINGS_H

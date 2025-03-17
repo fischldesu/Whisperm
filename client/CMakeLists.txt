@@ -50,6 +50,7 @@ set(Headers
         header/uicomponent/ChatBox.h
         header/uicomponent/Chat.h
         header/uicomponent/SystemTrayMenu.h
+        header/uicomponent/Panel.h
 )
 
 set(PROJECT_SOURCES
@@ -74,6 +75,7 @@ set(PROJECT_SOURCES
         ui/MainWindow.ui
         ui/LoginDialog.ui
         ui/LoginDialog.cpp
+        ui/MessageDialog.cpp
 
         ui/page/PageChats.cpp
         ui/page/PageContacts.cpp
@@ -88,8 +90,8 @@ set(PROJECT_SOURCES
         ui/component/ChatBox.cpp
         ui/component/ChatMessage.cpp
         ui/component/Chat.cpp
-        ui/MessageDialog.cpp
         ui/component/SystemTrayMenu.cpp
+        ui/component/Panel.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
