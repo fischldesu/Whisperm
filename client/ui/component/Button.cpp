@@ -124,18 +124,18 @@ void Button::mouseReleaseEvent(QMouseEvent* event)
 
 void Button::mouseMoveEvent(QMouseEvent* event)
 {
+    if (!mb_Hoverd)
+    {
+        property_styleState = Hover;
+        this->Transition();
+    }
+    mb_Hoverd = true;
     QPushButton::mouseMoveEvent(event);
-}
-
-void Button::enterEvent(QEnterEvent* event)
-{
-    property_styleState = Hover;
-    this->Transition();
-    return QPushButton::enterEvent(event);
 }
 
 void Button::leaveEvent(QEvent* event)
 {
+    mb_Hoverd = false;
     property_styleState = Normal;
     this->Transition();
     return QPushButton::leaveEvent(event);
