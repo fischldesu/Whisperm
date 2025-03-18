@@ -21,8 +21,8 @@ PageSettings::PageSettings(QWidget *parent) :
     //buttons
     ui->btn_github->set_bgRadius(8);
     ui->btn_website->set_bgRadius(8);
-    ui->btn_github->set_bgHoverColor({0,170,255,64});
-    ui->btn_website->set_bgHoverColor({0,170,255,64});
+    ui->btn_github->set_bgColor(Button::Hover, {0,170,255,64});
+    ui->btn_website->set_bgColor(Button::Hover, {0,170,255,64});
     connect(ui->btn_github, &QPushButton::clicked, []
         { QDesktopServices::openUrl(QUrl("https://github.com/fischldesu/Whisperm"));});
     connect(ui->btn_website, &QPushButton::clicked, []

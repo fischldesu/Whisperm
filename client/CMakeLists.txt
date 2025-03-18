@@ -35,7 +35,7 @@ set(Headers
         header/utils/Data.h
         header/utils/AppLog.h
         header/utils/Media.h
-        header/utils/Style.h
+        header/utils/Painter.h
         header/utils/Task.h
         header/utils/Animation.h
         header/utils/Cryptology.h
@@ -64,7 +64,7 @@ set(PROJECT_SOURCES
         utils/multiplatform.cpp
         utils/AppLog.cpp
         utils/Media.cpp
-        utils/Style.cpp
+        utils/Painter.cpp
         utils/Animation.cpp
         utils/Cryptology.cpp
         utils/BigInteger.cpp

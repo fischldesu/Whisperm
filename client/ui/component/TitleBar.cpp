@@ -13,10 +13,11 @@ TitleBar::TitleBar(QWidget* parent):QWidget(parent), m_title(new QLabel(this))
     {
         m_btns[i] = new Button(this);
         m_btns[i]->resize(50, 32);
-        m_btns[i]->set_bgHoverColor({64,64,64, 64});
+        m_btns[i]->set_bgColor(Button::Hover, {64,64,64, 64});
         m_btns[i]->set_IconScale(0.4);
     }
-    m_btns[Close]->set_bgHoverColor({Qt::red});
+    m_btns[Close]->set_bgColor(Button::Hover, {255, 0, 0, 255});
+    m_btns[Close]->set_bgColor(Button::Normal, {255, 0, 0, 0});
     m_btns[Close]->SetContent("", QIcon{":/titlebar/close.svg"});
     m_btns[Minimize]->SetContent("", QIcon{":/titlebar/minimize.svg"});
     m_btns[Maximize]->SetContent("", QIcon{":/titlebar/maximize.svg"});

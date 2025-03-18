@@ -56,9 +56,10 @@ void LoginDialog::InitTitlebar()
     btn_close->set_IconScale(0.43);
     btn_minimize->set_IconScale(0.43);
     btn_settings->set_IconScale(0.53);
-    btn_close->set_bgHoverColor(Qt::red);
-    btn_minimize->set_bgHoverColor({64,64,64,64});
-    btn_settings->set_bgHoverColor({64,64,64,64});
+    btn_close->set_bgColor(Button::Normal, {255, 0, 0, 0});
+    btn_close->set_bgColor(Button::Hover, Qt::red);
+    btn_minimize->set_bgColor(Button::Hover, {64,64,64,64});
+    btn_settings->set_bgColor(Button::Hover, {64,64,64,64});
     titlebar->setLayout(layout);
     titlebar->setFixedHeight(48);
     layout->setContentsMargins(16, 0, 0, 0);

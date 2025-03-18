@@ -3,7 +3,7 @@
 #include <QBoxLayout>
 #include <QEvent>
 
-#include "utils/Style.h"
+#include "utils/Painter.h"
 
 Panel::Panel(QWidget *parent)
     :QWidget(parent), m_IconContainer(new QWidget(this)),m_contentContainer(new QWidget(this))
@@ -64,7 +64,7 @@ void Panel::set_ShowDetail(const bool showDetail)
 
 void Panel::paintEvent(QPaintEvent* event)
 {
-    Style::PaintBackground(this, {128, 128, 128, 32}, this->rect(), 8);
+    Paint::Background(this, {128, 128, 128, 32}, this->rect(), 8);
 }
 
 void Panel::resizeEvent(QResizeEvent* event)

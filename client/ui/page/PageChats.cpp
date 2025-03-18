@@ -29,12 +29,12 @@ PageChats::PageChats(QWidget *parent) :
 
     ui->chatbox_btnSend->SetContent("Send", QIcon(":/svg/fonticon/send_0.svg"));
     ui->chatbox_btnSend->set_IconScale(0.5);
-    ui->chatbox_btnSend->set_fgColor(Qt::white);
-    ui->chatbox_btnMore->set_fgColor(Qt::white);
-    ui->chatbox_btnSend->set_bgColor(bgColor);
-    ui->chatbox_btnMore->set_bgColor(bgColor);
-    ui->chatbox_btnSend->set_bgHoverColor(hoverColor);
-    ui->chatbox_btnMore->set_bgHoverColor(hoverColor);
+    ui->chatbox_btnSend->set_textColor(Qt::white);
+    ui->chatbox_btnMore->set_textColor(Qt::white);
+    ui->chatbox_btnSend->set_bgColor(Button::Normal, bgColor);
+    ui->chatbox_btnMore->set_bgColor(Button::Normal, bgColor);
+    ui->chatbox_btnSend->set_bgColor(Button::Hover, hoverColor);
+    ui->chatbox_btnMore->set_bgColor(Button::Hover, hoverColor);
     ui->chatbox_btnSend->set_bgRadius({8, 0, 8, 0});
     ui->chatbox_btnMore->set_bgRadius({0, 8, 0, 8});
 

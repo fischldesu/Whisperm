@@ -5,7 +5,7 @@
 #include <QWidgetAction>
 #include <QSystemTrayIcon>
 
-#include "utils/Style.h"
+#include "utils/Painter.h"
 #include "uicomponent/Button.h"
 
 SystemTrayMenu::SystemTrayMenu(QSystemTrayIcon* trayIcon):m_trayIcon(trayIcon)
@@ -21,7 +21,7 @@ void SystemTrayMenu::AddAction(Button* button)
     const auto action = new QWidgetAction(&m_menu);
     action->setDefaultWidget(button);
     m_menu.addAction(action);
-    button->set_bgHoverColor(QColor(64, 64, 64, 64));
+    button->set_bgColor(Button::Hover, {64, 64, 64, 64});
     button->set_bgRadius(7);
     button->set_IconScale(0.8);
     connect(button, &QPushButton::clicked, [this, button]

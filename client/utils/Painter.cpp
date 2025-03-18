@@ -1,8 +1,8 @@
-#include "utils/Style.h"
+#include "utils/Painter.h"
 
 #include <QPainterPath>
 
-void Style::PaintBackground(QWidget* widget, const QColor color, const QRect rect, const qreal radius)
+void Paint::Background(QWidget* widget, const QColor color, const QRect rect, const qreal radius)
 {
     QPainter painter(widget);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -11,7 +11,7 @@ void Style::PaintBackground(QWidget* widget, const QColor color, const QRect rec
     painter.drawRoundedRect(rect, radius, radius);
 }
 
-void Style::PaintBackground(QWidget* widget, const QColor color, const QRect rect, const BorderRadius& radius)
+void Paint::Background(QWidget* widget, const QColor color, const QRect rect, const BorderRadius& radius)
 {
     QPainter painter(widget);
     painter.setRenderHint(QPainter::Antialiasing);
@@ -45,3 +45,13 @@ void Style::PaintBackground(QWidget* widget, const QColor color, const QRect rec
     path.closeSubpath();
     painter.drawPath(path);
 }
+
+void Paint::Border(QWidget* widget, QColor color, QRect rect, int strokWidth, qreal radius)
+{
+
+}
+
+void Paint::Border(QWidget* widget, QColor color, QRect rect, int strokWidth, const BorderRadius& radius)
+{
+}
+

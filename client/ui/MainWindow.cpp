@@ -37,7 +37,7 @@ void MainWindow::InitializeComponents()
         m_menubarBtns[i]->set_bgMargin(4);
         m_menubarBtns[i]->set_bgRadius(10);
         m_menubarBtns[i]->set_IconScale(0.5);
-        m_menubarBtns[i]->set_bgHoverColor({64,64,64, 64});
+        m_menubarBtns[i]->set_bgColor(Button::Hover, {64,64,64, 64});
         connect(m_menubarBtns[i], &QPushButton::clicked, [this, i] { this->SwitchPage(i); });
     }
     ui->menubar_btnMain->SetContent("", QIcon(":/menu/chat.svg"));

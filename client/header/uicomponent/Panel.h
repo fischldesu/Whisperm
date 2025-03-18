@@ -3,6 +3,8 @@
 
 #include <QLabel>
 
+
+
 class Panel: public QWidget{
     Q_OBJECT
 public:

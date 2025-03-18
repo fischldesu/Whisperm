@@ -5,7 +5,7 @@
 #include <QMouseEvent>
 #include <QPropertyAnimation>
 
-#include "utils/Style.h"
+#include "utils/Painter.h"
 
 ChatListItem::ChatListItem(QWidget* parent, const QString& from, const QString& content, const QDateTime& time)
 :QWidget(parent), uid(new QLabel(this)), content(new QLabel(this)), time(new QLabel(this)),m_anim_bgOpacity(nullptr)
@@ -144,7 +144,7 @@ void ChatListItem::paintEvent(QPaintEvent* event)
 {
     const auto color = QColor(128,128,128, m_bgOpacity);
     QPainter painter{this};
-    Style::PaintBackground(this, color, this->rect(), 0);
+    Paint::Background(this, color, this->rect(), 0);
     QWidget::paintEvent(event);
 }
 

@@ -1,19 +1,23 @@
 #include "uicomponent/Button.h"
 
 #include <QPaintEvent>
-#include <QPropertyAnimation>
 
-#include "utils/Style.h"
+#include "utils/Painter.h"
 
 Button::Button(QWidget* parent) : QPushButton(parent)
 {
-    m_Transiton_bgColor = new QPropertyAnimation(this, "bgColor", this);
-    m_Transiton_bgColor->setParent(this);
-    m_Transiton_bgColor->setDuration(200);
     this->setFlat(true);
     this->setAutoFillBackground(false);
     this->setMouseTracking(true);
     this->setCursor(Qt::CursorShape::PointingHandCursor);
+
+    connect(property_bgColor.Transitor(), &ColorTransition::Changing, [this]()
+        {
+            this->update();
+        });
+    this->set_bgColor(Normal, Qt::transparent);
+    this->set_bgColor(Hover, Qt::black);
+    this->set_bgColor(Pressed, Qt::black);
 }
 
 void Button::SetContent(const QString& text, const QIcon& icon)
@@ -26,7 +30,7 @@ void Button::set_bgMargin(const int margin)
 {
     if (margin < this->width() / 2 && margin < this->height() /2)
     {
-        m_bgMargin = margin;
+        property_bgMargin = margin;
         this->update();
     }
 }
@@ -35,48 +39,48 @@ void Button::set_bgRadius(const int radius)
 {
     if (radius >= 0)
     {
-        m_bgRadius = BorderRadius{radius, radius, radius, radius};
+        property_bgRadius = BorderRadius{radius, radius, radius, radius};
         this->update();
     }
 }
 
 void Button::set_bgRadius(const BorderRadius& radius)
 {
-    m_bgRadius = radius;
+    property_bgRadius = radius;
     this->update();
+}
+
+void Button::set_bgColor(const StyleState state, const QColor color)
+{
+    property_bgColor.set_Value(state, color);
+    if (state == Normal)
+        property_bgColor.Transitor()->property_set(color);
 }
 
 int Button::get_bgMargin() const
 {
-    return m_bgMargin;
+    return property_bgMargin;
 }
 
-
-void Button::Transition(const QColor new_color) const
-{
-    m_Transiton_bgColor->stop();
-    m_Transiton_bgColor->setStartValue(property_bgColor);
-    m_Transiton_bgColor->setEndValue(new_color);
-    m_Transiton_bgColor->start();
-}
-
-void Button::paintEvent(QPaintEvent* event)
+void Button::paintEvent(QPaintEvent *event)
 {
     const auto& text = this->text();
     const auto w = width();
     const auto h = height();
     const auto maxSize = w > h ? h : w;
-    const auto iconSize = maxSize * m_iconScale;
+    const auto iconSize = maxSize * property_iconScale;
     const auto icon_y = (h - iconSize) / 2;
     auto icon_x = (w - iconSize) / 2;
-    auto bgRect = this->rect().adjusted(m_bgMargin, m_bgMargin, -m_bgMargin, -m_bgMargin);
-    Style::PaintBackground(this, property_bgColor, bgRect, m_bgRadius);
+    QRect bgRect = this->rect();
+    if (property_bgMargin != 0)
+        this->rect().adjust(property_bgMargin, property_bgMargin, -property_bgMargin, -property_bgMargin);
+    Paint::Background(this, property_bgColor.Value(), bgRect, property_bgRadius);
     QPainter painter{this};
-    painter.setRenderHints(QPainter::TextAntialiasing | QPainter::Antialiasing);
     if (!text.isEmpty())
     {
         int flag = Qt::AlignCenter;
-        icon_x = (maxSize - iconSize) / 2 + m_bgMargin;
+        painter.setRenderHints(QPainter::TextAntialiasing | QPainter::Antialiasing);
+        icon_x = (maxSize - iconSize) / 2 + property_bgMargin;
         if (!m_icon.isNull())
         {
             bgRect.adjust(maxSize + icon_x / 2, 0, 0, 0);
@@ -89,14 +93,46 @@ void Button::paintEvent(QPaintEvent* event)
     m_icon.paint(&painter, icon_x, icon_y, iconSize, iconSize);
 }
 
+void Button::mousePressEvent(QMouseEvent* event)
+{
+    if(property_styleState != Pressed)
+    {
+        property_styleState = Pressed;
+        this->Transition();
+    }
+    QPushButton::mousePressEvent(event);
+}
+
+void Button::mouseReleaseEvent(QMouseEvent* event)
+{
+    if(property_styleState == Pressed)
+    {
+        property_styleState = Hover;
+        this->Transition();
+    }
+    QPushButton::mouseReleaseEvent(event);
+}
+
+void Button::mouseMoveEvent(QMouseEvent* event)
+{
+    QPushButton::mouseMoveEvent(event);
+}
+
 void Button::enterEvent(QEnterEvent* event)
 {
-    this->Transition(m_bgHoverColor);
+    property_styleState = Hover;
+    this->Transition();
     return QPushButton::enterEvent(event);
 }
 
 void Button::leaveEvent(QEvent* event)
 {
-    this->Transition(m_bgColor);
+    property_styleState = Normal;
+    this->Transition();
     return QPushButton::leaveEvent(event);
+}
+
+void Button::Transition()
+{
+    property_bgColor.Animate(property_styleState);
 }
