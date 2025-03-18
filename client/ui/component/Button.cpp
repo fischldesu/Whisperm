@@ -15,6 +15,7 @@ Button::Button(QWidget* parent) : QPushButton(parent)
         {
             this->update();
         });
+    property_bgColor.Transitor()->set_Duration(200);
     this->set_bgColor(Normal, Qt::transparent);
     this->set_bgColor(Hover, Qt::black);
     this->set_bgColor(Pressed, Qt::black);
@@ -39,14 +40,18 @@ void Button::set_bgRadius(const int radius)
 {
     if (radius >= 0)
     {
-        property_bgRadius = BorderRadius{radius, radius, radius, radius};
+        mb_SameBorderRadius = true;
         this->update();
+        property_bgRadius = BorderRadius{radius, radius, radius, radius};
     }
 }
 
 void Button::set_bgRadius(const BorderRadius& radius)
 {
     property_bgRadius = radius;
+    mb_SameBorderRadius = (radius.TopLeft == radius.TopRight &&
+                       radius.TopLeft == radius.BottomLeft &&
+                       radius.TopLeft == radius.BottomRight);
     this->update();
 }
 
@@ -71,10 +76,14 @@ void Button::paintEvent(QPaintEvent *event)
     const auto iconSize = maxSize * property_iconScale;
     const auto icon_y = (h - iconSize) / 2;
     auto icon_x = (w - iconSize) / 2;
-    QRect bgRect = this->rect();
+    auto bgRect = this->rect();
     if (property_bgMargin != 0)
-        this->rect().adjust(property_bgMargin, property_bgMargin, -property_bgMargin, -property_bgMargin);
-    Paint::Background(this, property_bgColor.Value(), bgRect, property_bgRadius);
+        bgRect.adjust(property_bgMargin, property_bgMargin, -property_bgMargin, -property_bgMargin);
+
+    if (mb_SameBorderRadius)
+        Paint::Background(this, property_bgColor.Value(), bgRect, property_bgRadius.TopLeft);
+    else
+        Paint::Background(this, property_bgColor.Value(), bgRect, property_bgRadius);
     QPainter painter{this};
     if (!text.isEmpty())
     {

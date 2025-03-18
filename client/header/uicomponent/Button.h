@@ -49,6 +49,7 @@ private:
     Animation::Color<StyleState> property_bgColor;
 
     QIcon m_icon;
+    bool mb_SameBorderRadius = true;
 
     void Transition();
 
