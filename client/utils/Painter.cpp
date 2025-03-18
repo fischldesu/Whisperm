@@ -2,21 +2,8 @@
 
 #include <QPainterPath>
 
-void Paint::Background(QWidget* widget, const QColor color, const QRect rect, const qreal radius)
+QPainterPath RoundedRectPath(const QRect rect, const BorderRadius& radius)
 {
-    QPainter painter(widget);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setBrush(color);
-    painter.setPen(Qt::NoPen);
-    painter.drawRoundedRect(rect, radius, radius);
-}
-
-void Paint::Background(QWidget* widget, const QColor color, const QRect rect, const BorderRadius& radius)
-{
-    QPainter painter(widget);
-    painter.setRenderHint(QPainter::Antialiasing);
-    painter.setBrush(color);
-    painter.setPen(Qt::NoPen);
     QPainterPath path;
     if (radius.TopLeft > 0) {
         path.moveTo(rect.left(), rect.top() + radius.TopLeft);
@@ -43,15 +30,43 @@ void Paint::Background(QWidget* widget, const QColor color, const QRect rect, co
         path.lineTo(rect.bottomLeft());
     }
     path.closeSubpath();
-    painter.drawPath(path);
+    return path;
 }
 
-void Paint::Border(QWidget* widget, QColor color, QRect rect, int strokWidth, qreal radius)
+void Paint::Background(QWidget* widget, const QColor color, const QRect rect, const qreal radius)
 {
-
+    QPainter painter(widget);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setBrush(color);
+    painter.setPen(Qt::NoPen);
+    painter.drawRoundedRect(rect, radius, radius);
 }
 
-void Paint::Border(QWidget* widget, QColor color, QRect rect, int strokWidth, const BorderRadius& radius)
+void Paint::Background(QWidget* widget, const QColor color, const QRect rect, const BorderRadius& radius)
 {
+    QPainter painter(widget);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setBrush(color);
+    painter.setPen(Qt::NoPen);
+    painter.drawPath(RoundedRectPath(rect, radius));
+}
+
+void Paint::Border(QWidget* widget, QColor color, QRect rect, int lineWidth, qreal radius)
+{
+    const auto adj = lineWidth/2;
+    QPainter painter(widget);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setBrush(Qt::NoBrush);
+    painter.setPen(QPen(color, lineWidth));
+    painter.drawRoundedRect(rect, radius, radius);
+}
+
+void Paint::Border(QWidget* widget, QColor color, QRect rect, int lineWidth, const BorderRadius& radius)
+{
+    QPainter painter(widget);
+    painter.setRenderHint(QPainter::Antialiasing);
+    painter.setBrush(Qt::NoBrush);
+    painter.setPen(QPen(color, lineWidth));
+    painter.drawPath(RoundedRectPath(rect, radius));
 }
 

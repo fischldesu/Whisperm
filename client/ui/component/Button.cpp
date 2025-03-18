@@ -55,11 +55,15 @@ void Button::set_bgRadius(const BorderRadius& radius)
     this->update();
 }
 
-void Button::set_bgColor(const StyleState state, const QColor color)
+void Button::set_bgColor(const StyleState state, const QColor color, const bool pressed_darker)
 {
     property_bgColor.set_Value(state, color);
     if (state == Normal)
+    {
         property_bgColor.Transitor()->property_set(color);
+    }
+    if (state == Hover && pressed_darker)
+        property_bgColor.set_Value(Pressed, color.darker(128));
 }
 
 int Button::get_bgMargin() const
@@ -81,9 +85,17 @@ void Button::paintEvent(QPaintEvent *event)
         bgRect.adjust(property_bgMargin, property_bgMargin, -property_bgMargin, -property_bgMargin);
 
     if (mb_SameBorderRadius)
+    {
         Paint::Background(this, property_bgColor.Value(), bgRect, property_bgRadius.TopLeft);
+        if (this->isChecked())
+            Paint::Border(this, Qt::gray, bgRect, 3, property_bgRadius.TopLeft);
+    }
     else
+    {
         Paint::Background(this, property_bgColor.Value(), bgRect, property_bgRadius);
+        if (this->isChecked())
+            Paint::Border(this, Qt::gray, bgRect, 3, property_bgRadius);
+    }
     QPainter painter{this};
     if (!text.isEmpty())
     {

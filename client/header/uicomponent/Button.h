@@ -39,7 +39,7 @@ public:
     void set_textColor(const QColor color) { auto pal = this->palette(); pal.setColor(QPalette::ButtonText, color); this->setPalette(pal);}
     QColor get_textColor() const { return this->palette().color(QPalette::ButtonText); }
 
-    void set_bgColor(StyleState state, QColor color);
+    void set_bgColor(StyleState state, QColor color, bool pressed_darker = true);
     QColor get_bgColor(const StyleState state) const { return property_bgColor.get_Value(state); }
 private:
     int property_bgMargin = 0;

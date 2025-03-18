@@ -16,9 +16,9 @@ namespace Paint {
     void Background(QWidget* widget, QColor color, QRect rect, qreal radius = 0);
     void Background(QWidget* widget, QColor color, QRect rect, const BorderRadius& radius);
 
-    void Border(QWidget* widget, QColor color, QRect rect, int strokWidth, qreal radius = 0);
-    void Border(QWidget* widget, QColor color, QRect rect, int strokWidth, const BorderRadius& radius);
-};
+    void Border(QWidget* widget, QColor color, QRect rect, int lineWidth, qreal radius = 0);
+    void Border(QWidget* widget, QColor color, QRect rect, int lineWidth, const BorderRadius& radius);
+}
 
 
 #endif //PAINTER_H
