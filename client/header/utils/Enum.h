@@ -28,6 +28,9 @@ public:
     [[nodiscard("Returns Name Only")]]
     QByteArray Name (E value)
     { return data.valueToKey(static_cast<underlyingType<E>>(value)); }
+
+    auto Data()
+    { return map.asKeyValueRange(); }
 private:
     QMetaEnum data;
     QMap<QByteArray, E> map;

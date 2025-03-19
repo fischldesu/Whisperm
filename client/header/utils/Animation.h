@@ -44,11 +44,9 @@ namespace Animation
     public:
         explicit Color(::ColorTransition* color):m_Animation(color)
         {
-            m_Animation->set_TargetProperty("property_color_");
         }
         Color():m_Animation(new ::ColorTransition)
         {
-            m_Animation->set_TargetProperty("property_color_");
         }
         ~Color() { m_Animation->Stop(); m_Animation->deleteLater(); }
 

@@ -4,18 +4,20 @@
 #include <QApplication>
 
 #include "Client.h"
+#include "header/utils/AppSettings.h"
 #include "utils/AppLog.h"
 #include "ui/LoginDialog.h"
 #include "ui/MainWindow.h"
 #include "uicomponent/Button.h"
 #include "uicomponent/SystemTrayMenu.h"
 
-#ifndef AppName_
-#define AppName_ "Whisperm"
-#endif
-#ifndef AppVersion_
-#define AppVersion_ "0.0.1(alpha)p1"
-#endif
+consteval const char* OrgName()
+{ return "fischldesu"; }
+consteval const char* AppName()
+{ return "Whisperm"; }
+consteval const char* AppVersion()
+{ return "0.0.1(alpha)p1"; }
+
 
 class whisperm {
 public:

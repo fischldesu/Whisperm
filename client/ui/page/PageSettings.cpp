@@ -3,6 +3,7 @@
 
 #include <QDesktopServices>
 #include <QCheckBox>
+#include "utils/AppSettings.h"
 #include "utils/Multiplatform.hpp"
 #include "uicomponent/Panel.h"
 
@@ -41,15 +42,23 @@ void PageSettings::InitialzieComponents()
     const auto checker1 = new QCheckBox(panel1);
     checker1->setText(" ");
     panel1->set_Controler(checker1);
-    panel1->set_Content({"在系统后台运行程序", "窗口关闭时不退出程序，并在系统托盘显示图标"});
+    panel1->set_Content({"在系统后台运行程序", "所有窗口关闭后将不会退出程序，可通过系统托盘再次打开窗口"});
     this->AddComponent(panel1);
+    const auto val = AppSettings::Get(AppSettings::QuitOnWindowClose, true).toBool();
+    checker1->setChecked(!val);
 
-    const auto panel2 = new Panel(this);
-    const auto checker2 = new QCheckBox(panel2);
-    checker2->setText(" ");
-    panel2->set_Controler(checker2);
-    panel2->set_Content({"不使用背景样式", "禁用窗口背景样式以提高性能"});
-    this->AddComponent(panel2);
+    // const auto panel2 = new Panel(this);
+    // const auto checker2 = new QCheckBox(panel2);
+    // checker2->setText(" ");
+    // panel2->set_Controler(checker2);
+    // panel2->set_Content({"存储配置文件到起始目录（未重启可能不生效）", "将配置文件存储到程序运行起始位置，而非标准系统配置目录"});
+    // this->AddComponent(panel2);
+
+    connect(checker1, &QCheckBox::stateChanged, [checker1]{
+        const auto quitOnWindowClose = !checker1->isChecked();
+        AppSettings::Set(AppSettings::QuitOnWindowClose, quitOnWindowClose);
+        QApplication::setQuitOnLastWindowClosed(quitOnWindowClose);
+    });
 }
 
 void PageSettings::AddComponent(Panel* component)

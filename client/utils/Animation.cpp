@@ -1,7 +1,7 @@
 #include "utils/Animation.h"
 
 ColorTransition::ColorTransition(QObject* parent)
-    :QObject(parent), m_Animation(this, "property_color", this)
+    :QObject(parent), m_Animation(this, "property_color_", this)
 {
     m_Animation.setDuration(300);
     connect(&m_Animation, &QPropertyAnimation::finished, [this]{ emit Finished(); });

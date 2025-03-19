@@ -9,8 +9,9 @@ int main(const int argc, char** argv)
 whisperm::whisperm(int argc, char** argv)
     :app(argc, argv), client(new Client)
 {
-    QApplication::setApplicationName(AppName_);
-    QApplication::setApplicationVersion(AppVersion_);
+    QApplication::setOrganizationName(OrgName());
+    QApplication::setApplicationName(AppName());
+    QApplication::setApplicationVersion(AppVersion());
 
     this->InitTrayIcon();
 }
@@ -24,7 +25,10 @@ whisperm::~whisperm()
 
 int whisperm::run()
 {
-    if (std::make_unique<LoginDialog>(this->client)->exec())
+    auto loginDialog = std::make_unique<LoginDialog>(this->client);
+    AppSettings::Load().then(QThread::currentThread(), [&loginDialog]
+    { loginDialog->DisplayComponents(); });
+    if (loginDialog->exec())
     {
         mainWindow = std::make_unique<MainWindow>(this->client);
 
@@ -32,9 +36,8 @@ int whisperm::run()
         {
             m_trayIcon->setToolTip(QApplication::applicationName()+ "\nUID: " + client->get_UID());
             m_trayIcon->show();
-            QApplication::setQuitOnLastWindowClosed(false);
         }
-
+        QApplication::setQuitOnLastWindowClosed(AppSettings::Get(AppSettings::QuitOnWindowClose, false).toBool());
         mainWindow->show();
     }
     else 
@@ -45,7 +48,6 @@ int whisperm::run()
 
 void whisperm::quit()
 {
-    QApplication::setQuitOnLastWindowClosed(true);
     QApplication::closeAllWindows();
     QApplication::quit();
 }

@@ -31,6 +31,7 @@ set(Headers
         header/ui/PageSettings.h
         header/ui/MessageDialog.h
 
+        header/utils/AppSettings.h
         header/utils/multiplatform.hpp
         header/utils/Data.h
         header/utils/AppLog.h
@@ -61,6 +62,7 @@ set(PROJECT_SOURCES
         source/Window.cpp
         assets/cr.qrc
 
+        utils/AppSettings.cpp
         utils/multiplatform.cpp
         utils/AppLog.cpp
         utils/Media.cpp

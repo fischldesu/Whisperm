@@ -5,7 +5,6 @@
 #include <QCloseEvent>
 
 #include "Client.h"
-#include "utils/AppLog.h"
 #include "ui/PageSettings.h"
 #include "uicomponent/Button.h"
 
@@ -25,6 +24,16 @@ LoginDialog::LoginDialog(Client* client) :
     ui->input_uid->setValidator(new QRegularExpressionValidator(QRegularExpression{"[A-Za-z0-9]*"}, this));
     InitTitlebar();
 
+    this->centralWidget->hide();
+    this->titlebarWidget->hide();
+    QTimer::singleShot(4000, [this]
+    {
+        if(this->centralWidget->isHidden())
+        {
+            ui->label_information->setText("配置可能未正确加载");
+            this->DisplayComponents();
+        }
+    });
 }
 
 LoginDialog::~LoginDialog() {
@@ -34,6 +43,12 @@ LoginDialog::~LoginDialog() {
 bool LoginDialog::exec()
 {
     return MessageDialog::exec(true);
+}
+
+void LoginDialog::DisplayComponents()
+{
+    this->centralWidget->show();
+    this->titlebarWidget->show();
 }
 
 void LoginDialog::InitTitlebar()

@@ -19,6 +19,7 @@ public:
     ~LoginDialog() override;
 
     bool exec();
+    void DisplayComponents();
 private:
     Client* client;
     Ui::LoginDialog *ui;
