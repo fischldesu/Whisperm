@@ -2,3 +2,6 @@
 .idea
 build
 /server.node/node_modules/
+/server.NET/bin/
+/server.NET/obj/
+/server.NET/.vs
