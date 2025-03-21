@@ -1,0 +1,10 @@
+<svg width="1024" height="1024" xmlns="http://www.w3.org/2000/svg" p-id="8218" version="1.1" class="icon" t="1742534934668">
+
+ <g>
+  <title>Layer 1</title>
+  <path id="svg_1" p-id="8219" fill="#333333" d="m928,768l-288,0l-416,256l0,-256l-128,0a96,96 0 0 1 -96,-96l0,-576a96,96 0 0 1 96,-96l832,0a96,96 0 0 1 96,96l0,576a96,96 0 0 1 -96,96zm-32,-640l-768,0l0,512l192,0l32,160l256,-160l288,0l0,-512z"/>
+  <rect id="svg_2" height="330" width="100" y="219" x="652.66996" fill="#333333"/>
+  <rect id="svg_4" height="330" width="100" y="219" x="270" fill="#333333"/>
+  <rect id="svg_5" height="330" width="100" y="219" x="462" fill="#333333"/>
+ </g>
+</svg>
