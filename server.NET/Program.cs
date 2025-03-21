@@ -15,6 +15,8 @@ foreach (string arg in args)
 
 }
 
-Messager messager = new(new Server(port));
-await messager.Server.Start();
-messager.Server.Stop();
+Server server = new(port);
+Messager messager = new(server);
+
+await server.Start();
+server.Stop();

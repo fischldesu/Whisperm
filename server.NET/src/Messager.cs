@@ -31,7 +31,7 @@ namespace server.src
             Server.ClientConnected += OnClientConnected;
             Server.ClientDisconnected += OnClientDisconnected;
         }
-
+        
         private void OnMessageReceived(object? sender, Server.MessageReceivedEventArgs e)
         {
             Client from = e.Client;
