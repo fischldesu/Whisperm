@@ -5,7 +5,7 @@ using System.Net.WebSockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace server.src
+namespace server.src.Data
 {
     internal class Client(WebSocket socket, string remoteEndpoint)
     {

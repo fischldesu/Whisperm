@@ -5,21 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
+using server.src.Data;
+using server.src.utils;
 using static server.src.utils.Logger;
 
 namespace server.src
 {
     internal class Messager
     {
-        enum MessageType
-        {
-            MSG,
-            LOGIN,
-            LOGOUT,
-            REGISTER,
-            ERROR
-        }
-
         public Server Server { get; }
 
         private readonly ConcurrentDictionary<string, Client> online = new();
@@ -34,23 +27,51 @@ namespace server.src
         
         private void OnMessageReceived(object? sender, Server.MessageReceivedEventArgs e)
         {
-            Client from = e.Client;
+            var from = e.Client;
             try
             {
-                var message = JsonNode.Parse(e.Message);
-                //
+                var sourceMessage = e.Message;
+                var type = Message.MessageType.UNKNOWN;
+
+                var message = JsonNode.Parse(sourceMessage) ?? throw new NullReferenceException();
+                switch (message.ToString())
+                {
+                    case "msg":
+                        type = Message.MessageType.MSG;
+                        break;
+                    case "login":
+                        type = Message.MessageType.LOGIN;
+                        break;
+                    case "logout":
+                        type = Message.MessageType.LOGOUT;
+                        break;
+                    case "register":
+                        type = Message.MessageType.REGISTER;
+                        break;
+                }
+
+                var data = message["data"];
+                var attach = message["attach"];
+                if (data != null && type != Message.MessageType.UNKNOWN)
+                {
+                    _ = ReplyMessage(new Message(from, type, data, attach?.ToString()));
+                }
+                else
+                {
+                    SendMessage(from, Message.MessageType.ERROR, new JsonObject { { "errtype", "err" }, { "err", "UNKNOWN_MESSAGE" } });
+                }
             }
             catch (System.Text.Json.JsonException)
             {
-                SendMessage(from, MessageType.ERROR, new JsonObject { { "json", "NOT_A_VALID_JSON" } });
+                SendMessage(from, Message.MessageType.ERROR, new JsonObject { { "errtype", "json" }, { "json", "NOT_A_VALID_JSON" } });
             }
             catch (NullReferenceException ex)
             {
-                SendMessage(from, MessageType.ERROR, new JsonObject { { "ref", $"VALUE_INVALID:{ex.Message}" } });
+                SendMessage(from, Message.MessageType.ERROR, new JsonObject { { "errtype", "ref" }, { "ref", $"VALUE_INVALID:{ex.Message}" } });
             }
             catch (Exception ex)
             {
-                SendMessage(from, MessageType.ERROR, new JsonObject { { "exception", ex.Message } });
+                SendMessage(from, Message.MessageType.ERROR, new JsonObject { { "errtype", "unknown" }, { "unknown", ex.Message } });
             }
         }
 
@@ -64,20 +85,15 @@ namespace server.src
             Log($"(ClosedConnection) {e.Client.ID}");
         }
 
-        private async void SendMessage(Client client, MessageType type, string child, string attach = "")
+        private async Task ReplyMessage(Message message)
         {
-            string reply = new JsonObject
-            {
-                { "type", type.ToString()},
-                { "data", child },
-                { "attach", attach }
-            }.ToJsonString();
-            if (!await Server.SendTextAsync(client, reply))
-            {
-                Log($"ERROR send message to client:{reply}");
-            }
+            MessageAnalyzer result = await MessageAnalyzer.Analyze(message);
+            SendMessage(result.Target, result.Type, result.Data, result.Attach);
+            if (result.MessageForward_OK)
+                SendMessage(message.Sender, result.Type, new JsonObject{ { "reply", "ok" }, { "stamp", message.Attach } });
         }
-        private async void SendMessage(Client client, MessageType type, JsonObject child, string attach = "")
+
+        private async void SendMessage(Client target, Message.MessageType type, JsonObject child, string attach = "")
         {
             string reply = new JsonObject
             {
@@ -85,10 +101,12 @@ namespace server.src
                 { "data", child },
                 { "attach", attach }
             }.ToJsonString();
-            if(!await Server.SendTextAsync(client, reply))
-            {
+            
+            if(!await Server.SendTextAsync(target, reply))
                 Log($"ERROR send message to client:{reply}");
-            }
+            
         }
+
+
     }
 }
