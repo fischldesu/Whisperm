@@ -46,19 +46,19 @@ namespace server.src.utils
 
         private async Task Message_Forward()
         {
-            Log("_fwd");
+            //
         }
 
         private async Task Message_Login(bool login)
         {
             Target = message.Sender;
-            Log("_login");
+            //
         }
 
         private async Task Message_Register()
         {
             Target = message.Sender;
-            Log("_reg");
+            //
         }
 
         public static async Task<MessageAnalyzer> Analyze(Message message)

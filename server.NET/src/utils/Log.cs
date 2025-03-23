@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace server.src.utils
 {
-    internal class Logger
+    public class Logger
     {
         public enum Level
         {
