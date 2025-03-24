@@ -7,8 +7,21 @@ int main(const int argc, char** argv)
 }
 
 whisperm::whisperm(int argc, char** argv)
-    :app(argc, argv), client(new Client)
+    :app(argc, argv)
 {
+    QString proxy{};
+
+    const auto args = QApplication::arguments();
+    if (args.size() > 1)
+        for (const auto& arg: args)
+        {
+            if (arg.startsWith("--proxy="))
+                proxy = arg.mid(9);
+
+        }
+
+    client = new Client(proxy);
+
     QApplication::setOrganizationName(OrgName());
     QApplication::setApplicationName(AppName());
     QApplication::setApplicationVersion(AppVersion());

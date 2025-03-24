@@ -7,7 +7,7 @@
 #include "utils/AppLog.h"
 #include "utils/Cryptology.h"
 
-Client::Client(QObject* parent, const QUrl& proxy) :
+Client::Client(const QUrl& proxy, QObject* parent) :
     QObject(parent), server_url("wss://server.fischldesu.com/whisperm"), m_state(State::Disconnected),
     m_timeout_counter(0), timeout_time(10)
 {

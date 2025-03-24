@@ -19,7 +19,7 @@ public:
         Idle,
         Requesting
     };
-    explicit Client(QObject* parent = nullptr, const QUrl& proxy = {});
+    explicit Client( const QUrl& proxy = {}, QObject* parent = nullptr);
     ~Client() override;
 
 

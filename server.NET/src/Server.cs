@@ -64,7 +64,7 @@ namespace server.src
                 listener = new HttpListener();
                 listener.Prefixes.Add($"http://{Host}:{Port}/");
                 listener.Start();
-                Log($"Server running on port: {Port}", Level.INFO);
+                Log($"Server running on port: {Port}");
             }
             catch (Exception e)
             {

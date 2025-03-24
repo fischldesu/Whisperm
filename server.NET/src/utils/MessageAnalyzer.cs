@@ -16,7 +16,7 @@ namespace server.src.utils
         public JsonObject Data { get; private set; }
         public Message.MessageType Type { get; private set; }
         public string Attach { get; private set; }
-        public bool MessageForward_OK { get; private set; } = false;
+        public bool MessageForwardOk { get; private set; } = false;
 
 #pragma warning disable CS8618
         private MessageAnalyzer(Message source)
@@ -27,7 +27,7 @@ namespace server.src.utils
 
         private async Task AnalyzeMessage()
         {
-            switch(message.Type)
+            switch (message.Type)
             {
                 case Message.MessageType.MSG:
                     await Message_Forward();

@@ -89,7 +89,7 @@ namespace server.src
         {
             MessageAnalyzer result = await MessageAnalyzer.Analyze(message);
             SendMessage(result.Target, result.Type, result.Data, result.Attach);
-            if (result.MessageForward_OK)
+            if (result.MessageForwardOk)
                 SendMessage(message.Sender, result.Type, new JsonObject{ { "reply", "ok" }, { "stamp", message.Attach } });
         }
 
@@ -106,7 +106,6 @@ namespace server.src
                 Log($"ERROR send message to client:{reply}");
             
         }
-
 
     }
 }

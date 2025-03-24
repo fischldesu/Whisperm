@@ -54,7 +54,7 @@ void PageSettings::InitialzieComponents()
     // panel2->set_Content({"存储配置文件到起始目录（未重启可能不生效）", "将配置文件存储到程序运行起始位置，而非标准系统配置目录"});
     // this->AddComponent(panel2);
 
-    connect(checker1, &QCheckBox::stateChanged, [checker1]{
+    connect(checker1, &QCheckBox::checkStateChanged, [checker1]{
         const auto quitOnWindowClose = !checker1->isChecked();
         AppSettings::Set(AppSettings::QuitOnWindowClose, quitOnWindowClose);
         QApplication::setQuitOnLastWindowClosed(quitOnWindowClose);

@@ -1,0 +1,5 @@
+{
+    "type": "msg",
+    "data": {    },
+    "attach": "${attach-messages}"
+}

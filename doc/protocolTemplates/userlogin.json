@@ -1,0 +1,25 @@
+[
+    {
+        "//": "from sender",
+
+        "type" : "login",
+        "data" : {
+            "uid": "${uid}",
+            "pwd": "${password}",
+            "pubkey": "${user_RSA_publickey}"
+        },
+        "attach": ""
+    },
+
+    {
+        "//": "reply to the sender",
+
+        "type" : "login",
+        "data" : {
+            "result": "${auth_result(AUTH_OK/AUTH_FAILED)}",
+            "reason": "${failed_reason(UID_OR_PWD_WRONG/ACCOUNT_ERR)}"
+        },
+        "attach": ""
+    }
+
+]

@@ -1,6 +1,11 @@
+.vs
 .vscode
 .idea
 build
+out
+desktop.ini
+CMakeLists.txt.user
+CMakeSettings.json
 /server.node/node_modules/
 /server.NET/bin/
 /server.NET/obj/

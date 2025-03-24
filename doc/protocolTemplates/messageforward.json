@@ -1,0 +1,23 @@
+[
+    {
+        "//": "from sender",
+        
+        "type": "msg",
+        "data": {
+            "from": "${from}",
+            "to": "${to}",
+            "content": "${message}"
+        },
+        "attach": "${sender-msg-stamp}"
+    },
+
+    {
+        "//": "reply to the sender",
+
+        "data": {
+            "reply": "ok",
+            "stamp": "${sender-msg-stamp}"
+        },
+        "attach": "${empty}"
+    }
+]
