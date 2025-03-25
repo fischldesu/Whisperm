@@ -22,6 +22,7 @@ include_directories(${OPENSSL_INCLUDE_DIR})
 set(CMAKE_DISABLE_FIND_PACKAGE_OpenSSL TRUE)
 set(Headers
         whisperm.h
+        header/Kernel.h
         header/Client.h
 
         header/ui/Window.h
@@ -59,6 +60,7 @@ set(PROJECT_SOURCES
         ${Headers}
         main.cpp
         source/Data.cpp
+        source/Kernel.cpp
         source/Client.cpp
         source/Window.cpp
         assets/cr.qrc
