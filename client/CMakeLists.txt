@@ -15,6 +15,7 @@ set(OPENSSL_CRYPTO_LIBRARY ${OPENSSL_ROOT_DIR}/crypto)
 
 find_package(QT NAMES Qt6 REQUIRED COMPONENTS Widgets Svg WebSockets Concurrent openssl)
 find_package(Qt6 REQUIRED COMPONENTS Widgets Svg WebSockets Concurrent)
+find_package(OpenSSL REQUIRED)
 
 include_directories(header)
 include_directories(${OPENSSL_INCLUDE_DIR})
@@ -115,12 +116,13 @@ else()
         )
     endif()
 endif()
-
+target_include_directories(${ProjName} PRIVATE ${OPENSSL_INCLUDE_DIR})
 target_link_libraries(${ProjName} PRIVATE 
     Qt6::Widgets
     Qt6::Svg
     Qt6::WebSockets
-        Qt6::Concurrent
+    Qt6::Concurrent
+    ${OPENSSL_LIBRARIES}
     )
 if (MSVC)
     target_compile_definitions(${ProjName} PRIVATE NOMINMAX)

@@ -14,7 +14,7 @@ namespace Crypto
 {
     namespace RSA
     {
-        QPair<QByteArray, QByteArray> Generate();
+        std::pair<QByteArray, QByteArray> Generate();
         QByteArray EncryptMessage(const QByteArray& plainText, const QByteArray& publicKey);
         QByteArray DecryptMessage(const QByteArray& cipherText, const QByteArray& privateKey);
     }

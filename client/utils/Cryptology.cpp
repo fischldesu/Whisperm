@@ -1,5 +1,11 @@
 #include "utils/Cryptology.h"
 
+#include <openssl/rsa.h>
+#include <openssl/pem.h>
+#include <openssl/err.h>
+
+#include "utils/AppLog.h"
+
 SafeTransport::SafeTransport(QObject* parent)
     :QObject(parent)
 {
@@ -65,9 +71,56 @@ bool SafeTransport::HandShake(const QByteArray& encrypted)
 
 namespace Crypto
 {
-    QPair<QByteArray, QByteArray> RSA::Generate()
+    std::pair<QByteArray, QByteArray> RSA::Generate()
     {
-        return {};
+        OpenSSL_add_all_algorithms();
+        ERR_load_crypto_strings();
+
+        EVP_PKEY* pkey = EVP_PKEY_new();
+        if (!pkey)
+        {
+
+        }
+
+        EVP_PKEY_CTX* pctx = EVP_PKEY_CTX_new_id(EVP_PKEY_RSA, nullptr);
+        if (!pctx || EVP_PKEY_keygen_init(pctx) <= 0)
+        {
+
+        }
+
+        if (EVP_PKEY_CTX_set_rsa_keygen_bits(pctx, 2048) <= 0)
+        {
+
+        }
+
+        if (EVP_PKEY_keygen(pctx, &pkey) <= 0)
+        {
+
+        }
+
+        BIO* privateBio = BIO_new(BIO_s_mem());
+        if (!privateBio || !PEM_write_bio_PrivateKey(privateBio, pkey, nullptr, nullptr, 0, nullptr, nullptr))
+        {
+
+        }
+        BUF_MEM* privateBuf;
+        BIO_get_mem_ptr(privateBio, &privateBuf);
+        const QByteArray private_key(privateBuf->data, static_cast<qsizetype>(privateBuf->length));
+        BIO_free_all(privateBio);
+
+        BIO* publicBio = BIO_new(BIO_s_mem());
+        if (!publicBio || !PEM_write_bio_PUBKEY(publicBio, pkey)) {
+
+        }
+        BUF_MEM* publicBuf;
+        BIO_get_mem_ptr(publicBio, &publicBuf);
+        const QByteArray public_key(publicBuf->data, static_cast<qsizetype>(publicBuf->length));
+        BIO_free_all(publicBio);
+
+        EVP_PKEY_free(pkey);
+        EVP_PKEY_CTX_free(pctx);
+
+        return {public_key, private_key};
     }
 
     QByteArray RSA::EncryptMessage(const QByteArray& plainText, const QByteArray& publicKey)
