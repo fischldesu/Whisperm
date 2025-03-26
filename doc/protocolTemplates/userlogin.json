@@ -16,6 +16,7 @@
 
         "type" : "login",
         "data" : {
+            "uid" : "${uid}",
             "result": "${auth_result(AUTH_OK/AUTH_FAILED)}",
             "reason": "${failed_reason(UID_OR_PWD_WRONG/ACCOUNT_ERR)}"
         },

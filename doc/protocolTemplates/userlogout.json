@@ -1,0 +1,22 @@
+[
+  {
+    "//": "from sender (user log out proactively)",
+
+    "type" : "logout",
+    "data" : {
+      "uid": "${uid}"
+    },
+    "attach": ""
+  },
+
+  {
+    "//": "to the sender",
+
+    "type" : "logout",
+    "data" : {
+      "reason": "${(LOGIN_ELSEWHERE/USER_INITIATE_LOGOUT)}"
+    },
+    "attach": ""
+  }
+
+]

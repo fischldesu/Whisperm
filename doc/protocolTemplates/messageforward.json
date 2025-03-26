@@ -6,7 +6,8 @@
         "data": {
             "from": "${from}",
             "to": "${to}",
-            "content": "${message}"
+            "content": "${message}",
+            "time": "${datetime}"
         },
         "attach": "${sender-msg-stamp}"
     },
